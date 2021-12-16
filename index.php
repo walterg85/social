@@ -146,6 +146,60 @@
         </div>
     </div>
 
+    <!-- Panel lateral para edicion de perfil de usuario -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasWithBackdropLabel3"  >
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel3">Your perfil</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="frmTopic" class="needs-validation-topic" novalidate>
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <label for="firstName" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="lastName" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid last name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <label for="txtEmail" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="" value="" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <center>
+                            <figure class="figure d-none">
+                                <img src="#" class="figure-img img-fluid rounded imgPreviewUser">
+                                <figcaption class="figure-caption text-end labelImg">Preview</figcaption>
+                            </figure>
+                        </center>
+                    </div>
+                </div>                
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputPhotoUser"><i class="bi bi-camera-fill"></i></label>
+                    <input type="file" class="form-control" id="inputPhotoUser">
+                </div>
+
+                <button type="button" class="w-100 btn btn-lg btn-success" id="btnUpdateProfile">Submit</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Menu principal -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
@@ -163,7 +217,7 @@
                         <a class="nav-link" href="#">Notifications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="javascript:void(0);" id="linkProfile">Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Switch account</a>
@@ -276,10 +330,9 @@
 
     <script type="text/javascript">
         var canvasGroup         = new bootstrap.Offcanvas( $("#offcanvasGroup") ),
-            canvasTopic         = new bootstrap.Offcanvas( $("#offcanvasTopic") )
-            maxCroppedWidth     = 300,
-            maxCroppedHeight    = 300,
-            topicImage          = null,
+            canvasTopic         = new bootstrap.Offcanvas( $("#offcanvasTopic") ),
+            canvasUser          = new bootstrap.Offcanvas( $("#offcanvasUser") ),
+            cropImage           = null,
             userData            = <?php echo json_encode($_SESSION['authData']); ?>;
 
         (function () {
@@ -294,11 +347,29 @@
             // Mostrar los 1ros 10 gupos en la barra principal
             listGroup(10, "dvGroupContent");
 
-            // Activar control de edicion de imagenes
-            initComponent();
-
             // Icia verificacion de foto de perfila
             $("#newTopic").click( preventTopic);
+
+            // Activar control de imagen para perfil de usuario
+            $("#linkProfile").click( function(){
+                initComponent("imgPreviewUser", "inputPhotoUser", 300, 300);
+
+                $("#firstName").val( userData.name);
+                $("#lastName").val( userData.last_name);
+                $("#txtEmail").val( userData.email);
+
+                if(userData.image != "nothing"){
+                    $(".imgPreviewUser").parent().removeClass("d-none");
+                    $(".imgPreviewUser").attr("src", userData.image);
+                } else {
+                    $(".imgPreviewUser").parent().addClass("d-none");
+                }
+
+                canvasUser.show();
+            });
+
+            // Disparar evento para actualizar perfil
+            $("#btnUpdateProfile").click( updatePerfil);
         })()
 
         // Metodo para registrar nuevo grupo
@@ -370,7 +441,7 @@
         }
 
         // Iniciar componenetes para edicion de imagen
-        function initComponent() {
+        function initComponent(objPreview, ctrlInput, maxCroppedWidth, maxCroppedHeight) {
             // Controlar tipo de objeto que intentan subir
             $('input[type="file"]').unbind().change( function(){
                 let ext = $( this ).val().split('.').pop();
@@ -389,9 +460,9 @@
             });
 
             // Image Cropper
-            let picture = $(".imgPreview"),
+            let picture     = $(`.${objPreview}`),
                 image       = $("#previewCrop")[0],
-                inputFile1   = $("#inputPhoto")[0],
+                inputFile1  = $(`#${ctrlInput}`)[0],
                 $modal      = $('#modalCrop'),
                 cropper     = null;
 
@@ -455,7 +526,7 @@
                         .parent().removeClass('d-none');
 
                     canvas.toBlob(function (blob){
-                        topicImage = blob;
+                        cropImage = blob;
                     });
                 }
             });
@@ -468,6 +539,11 @@
             } else {
                 showAlert("warning", "Before posting a topic, you must update your profile picture", 4000);
             }
+        }
+
+        // Metodo para actualizar perfil de usuario
+        function updatePerfil(argument) {
+            // body...
         }
     </script>
   </body>

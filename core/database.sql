@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 16-12-2021 a las 01:58:14
+-- Tiempo de generación: 16-12-2021 a las 21:56:45
 -- Versión del servidor: 8.0.17
 -- Versión de PHP: 7.3.10
 
@@ -44,6 +44,20 @@ CREATE TABLE `comentario` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `grupo`
+--
+
+DROP TABLE IF EXISTS `grupo`;
+CREATE TABLE `grupo` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(500) NOT NULL,
+  `fecha_registro` datetime NOT NULL,
+  `estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `post`
 --
 
@@ -54,6 +68,7 @@ CREATE TABLE `post` (
   `contenido` longtext NOT NULL,
   `fecha_registro` datetime NOT NULL,
   `user_id` int(11) NOT NULL,
+  `grupo_id` int(11) NOT NULL,
   `estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -85,6 +100,12 @@ ALTER TABLE `comentario`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `post`
 --
 ALTER TABLE `post`
@@ -105,6 +126,12 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `comentario`
 --
 ALTER TABLE `comentario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `grupo`
+--
+ALTER TABLE `grupo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

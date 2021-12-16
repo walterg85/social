@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Hugo 0.84.0">
+        <title>Signin Template · Bootstrap v5.0</title>    
+
+        <!-- Bootstrap, CSS & Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <!-- sweetalert2 -->
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+        <link rel="icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+        <link rel="icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+        <link rel="manifest" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/manifest.json">
+        <link rel="mask-icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+        <link rel="icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon.ico">
+        <meta name="theme-color" content="#7952b3">
+
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+
+            .offcanvas-end{
+                width: 600px !important;
+            }
+        </style>    
+
+        <!-- Custom styles for this template -->
+        <link href="https://getbootstrap.com/docs/5.0/examples/sign-in/signin.css" rel="stylesheet">
+    </head>
+    <body>    
+        <main class="form-signin">
+            <!-- Panel lateral para registrar nuevacuenta -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRegister" aria-labelledby="offcanvasWithBackdropLabel"  >
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Register a new account here</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <form id="frmSignin" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label for="inputName" class="form-label labelInputName">Name</label>
+                                    <input type="text" name="inputName" class="form-control" id="inputName" autocomplete="off" required>              
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label for="inputLastName" class="form-label labelInputDesc">Last name</label>
+                                    <input type="text" name="inputLastName" class="form-control" id="inputLastName" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label for="inputMail" class="form-label labelInputDesc">E-mail</label>
+                                    <input type="email" name="inputMail" class="form-control" id="inputMail" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <label for="inputPassword" class="form-label labelInputDesc">Password</label>
+                                    <input type="password" name="inputPassword" class="form-control" id="inputPassword" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegister">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+            <form class="text-center">
+                <img class="mb-4" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57" />
+                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="button">Login</button>
+                <button type="button" class="w-100 btn btn-lg btn-outline-secondary mt-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister" aria-controls="offcanvasRegister">Sign in</button>
+                <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+            </form>
+        </main>
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#btnRegister").click( fnRegistrar);
+            });
+
+            // Metodo para registrar nuevos usuarios
+            function fnRegistrar() {
+                let forms       = document.querySelectorAll('.needs-validation'),
+                    continuar   = true;
+
+                Array.prototype.slice.call(forms).forEach(function (formv) { 
+                    if (!formv.checkValidity())
+                        continuar = false;
+
+                    formv.classList.add('was-validated');
+                });
+
+                if(!continuar)
+                    return false;
+
+                let form        = $("#frmSignin")[0],
+                    formData    = new FormData(form);
+
+                formData.append("_method", "POST");
+
+                $.ajax({
+                    url: 'core/controllers/user.php',
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.codeResponse == 200){
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: "success",
+                                text: "User account registered successfully",
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }else{
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: "error",
+                                text: codeResponse.message,
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    },
+                    processData: false,
+                    contentType: false
+                });
+            }
+        </script>
+    </body>
+</html>

@@ -38,7 +38,37 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
-		}
+		} else if($put_vars['_method'] == 'validarUsuario'){
+			$tmpResponse = $userModel->validarUsuario($put_vars['email']);
+
+			$response = array(
+				'codeResponse' 	=> 0,
+				'message' 		=> 'Username or password incorrect'
+			);
+
+			if($tmpResponse){
+				if (password_verify($put_vars['password'], $tmpResponse->password)){
+					unset($tmpResponse->password);
+
+					$response = array(
+						'codeResponse' 	=> 200
+					);
+
+					// Primero se setea la foto por defecto del usuario, se valida si existe el archivo de fotografia con su ID, si existe se cambia la ruta de la foto.
+					$fotografia = "assets/img/user/default.jpg";
+					if( is_file(dirname(__FILE__, 3) . "/assets/img/user/". $tmpResponse->id . ".jpg" ) )
+						$fotografia = "assets/img/user/". $tmpResponse->id . ".jpg";
+
+					$_SESSION['socialLogin']		= TRUE;
+					$_SESSION['authData'] 			= $tmpResponse;
+					$_SESSION['authData']->image 	= $fotografia;
+				}
+			}
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} 
 	}
 
 	function encryptPass($strPassword) {

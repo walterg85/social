@@ -65,19 +65,19 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="inputLastName" class="form-label labelInputDesc">Last name</label>
+                                    <label for="inputLastName" class="form-label">Last name</label>
                                     <input type="text" name="inputLastName" class="form-control" id="inputLastName" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="inputMail" class="form-label labelInputDesc">E-mail</label>
+                                    <label for="inputMail" class="form-label">E-mail</label>
                                     <input type="email" name="inputMail" class="form-control" id="inputMail" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="inputPassword" class="form-label labelInputDesc">Password</label>
+                                    <label for="inputPassword" class="form-label">Password</label>
                                     <input type="password" name="inputPassword" class="form-control" id="inputPassword" autocomplete="off" required>
                                 </div>
                             </div>
@@ -92,12 +92,12 @@
                 <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">Email address</label>
+                    <input type="email" class="form-control" id="inputLoginEmail" placeholder="name@example.com">
+                    <label for="inputLoginEmail">Email address</label>
                 </div>
                 <div class="form-floating">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword">Password</label>
+                    <input type="password" class="form-control" id="inputLoginPassword" placeholder="Password">
+                    <label for="inputLoginPassword">Password</label>
                 </div>
 
                 <div class="checkbox mb-3">
@@ -105,7 +105,7 @@
                         <input type="checkbox" value="remember-me"> Remember me
                     </label>
                 </div>
-                <button class="w-100 btn btn-lg btn-primary" type="button">Login</button>
+                <button class="w-100 btn btn-lg btn-primary" type="button" id="btnLogin">Login</button>
                 <button type="button" class="w-100 btn btn-lg btn-outline-secondary mt-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRegister" aria-controls="offcanvasRegister">Sign in</button>
                 <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
             </form>
@@ -119,7 +119,17 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
+                // Disparar evento de registro de usuario
                 $("#btnRegister").click( fnRegistrar);
+
+                // Disparar evento de inicio de session
+                $("#btnLogin").click( fnValidarUsuario);
+
+                // Cuando se hace enter en el inputpassword se ejecuta el metodo de validar login
+                $('#inputLoginPassword').keypress(function(e) {
+                    if(e.which == 13)
+                        fnValidarUsuario();
+                });
             });
 
             // Metodo para registrar nuevos usuarios
@@ -156,11 +166,17 @@
                                 showConfirmButton: false,
                                 timer: 3000
                             });
+
+                            $("#inputLoginEmail").val( $("#inputMail").val() );
+                            $("#inputLoginPassword").val( $("#inputPassword").val() );
+
+                            fnValidarUsuario();
+
                         }else{
                             Swal.fire({
                                 position: 'top-end',
                                 icon: "error",
-                                text: codeResponse.message,
+                                text: response.message,
                                 showConfirmButton: false,
                                 timer: 3000
                             });
@@ -168,6 +184,30 @@
                     },
                     processData: false,
                     contentType: false
+                });
+            }
+
+            // Metodo para inicio de session
+            function fnValidarUsuario(){
+                let objData = {
+                        "_method":  "validarUsuario",
+                        "email":    $("#inputLoginEmail").val(),
+                        "password": $("#inputLoginPassword").val()
+                };
+
+                $.post("core/controllers/user.php", objData, function(result) {
+                    if(result.codeResponse == 200){
+                        localStorage.setItem("socialLogin", true);
+                        window.location.replace("index.php");
+                    } else {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: "error",
+                            text: result.message,
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
                 });
             }
         </script>

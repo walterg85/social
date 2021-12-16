@@ -30,4 +30,20 @@
                 return [FALSE, $e->getCode()];
             }
         }
+
+        // Metodo auxiliar para obtener la iunformacion de inicio de session de un usuario
+        public function validarUsuario($email) {
+            $pdo = new Conexion();
+            $cmd = 'SELECT id, name, last_name, email, password, register_date FROM user WHERE email =:email AND active = 1';
+
+            $parametros = array(
+                ':email' => $email
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+            $sql->setFetchMode(PDO::FETCH_OBJ);
+
+            return $sql->fetch();
+        }
     }

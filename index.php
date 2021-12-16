@@ -43,11 +43,37 @@
                 font-size: 3.5rem;
             }
         }
+
+        .offcanvas-end{
+            width: 500px !important;
+        }
     </style>    
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/5.0/examples/offcanvas-navbar/offcanvas.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+    <!-- Panel lateral para registrar nuevo grupo -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasGroup" aria-labelledby="offcanvasWithBackdropLabel"  >
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Register a new group here</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="frmGroup" class="needs-validation" novalidate>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="inputNameGroup" class="form-label">Name</label>
+                            <input type="text" name="inputNameGroup" class="form-control" id="inputNameGroup" autocomplete="off" required>              
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterGroup">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Menu principal -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Offcanvas navbar</a>
@@ -86,20 +112,14 @@
         </div>
     </nav>
 
+    <!-- Grupos -->
     <div class="nav-scroller bg-body shadow-sm">
         <nav class="nav nav-underline" aria-label="Secondary navigation">
-            <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-            <a class="nav-link" href="#">
-                Friends
-                <span class="badge bg-light text-dark rounded-pill align-text-bottom">27</span>
-            </a>
-            <a class="nav-link" href="#">Explore</a>
-            <a class="nav-link" href="#">Suggestions</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link active" aria-current="page" href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvasGroup" aria-controls="offcanvasGroup">New group</a>
+            <label class="nav-link">|</label>
+            <div id="dvGroupContent">
+                <!-- <a class="nav-link" href="javascript:void(0);">Explore</a> -->
+            </div>
         </nav>
     </div>
 

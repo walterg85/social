@@ -55,7 +55,7 @@
 					);
 
 					// Primero se setea la foto por defecto del usuario, se valida si existe el archivo de fotografia con su ID, si existe se cambia la ruta de la foto.
-					$fotografia = "assets/img/user/default.jpg";
+					$fotografia = "nothing";
 					if( is_file(dirname(__FILE__, 3) . "/assets/img/user/". $tmpResponse->id . ".jpg" ) )
 						$fotografia = "assets/img/user/". $tmpResponse->id . ".jpg";
 

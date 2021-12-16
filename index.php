@@ -16,11 +16,20 @@
     <meta name="generator" content="Hugo 0.84.0">
     <title>Offcanvas navbar template · Bootstrap v5.0</title>
 
-    <!-- Bootstrap, CSS & Icons -->
+    <!-- Bootstrap, CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
 
     <!-- sweetalert2 -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- cropperCSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css" integrity="sha512-w+u2vZqMNUVngx+0GVZYM21Qm093kAexjueWOv9e9nIeYJb1iEfiHC7Y+VvmP/tviQyA5IR32mwN/5hTEJx6Ng==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- cropperJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js" integrity="sha512-9pGiHYK23sqK5Zm0oF45sNBAX/JqbZEP7bSDHyt+nT3GddF+VFIcYNqREt0GDpmFVZI3LZ17Zu9nMMc9iktkCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
@@ -55,6 +64,27 @@
     <link href="https://getbootstrap.com/docs/5.0/examples/offcanvas-navbar/offcanvas.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+    <!-- Modal para editar las imagenes -->
+    <div class="modal fade" id="modalCrop" tabindex="-1" role="dialog" aria-labelledby="modalLabelP" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabelP">Edit / Crop the image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container mb-3" style="max-height: 500px">
+                        <img id="previewCrop" src="#">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btnmdlC" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="cropImage">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Panel lateral para registrar nuevo grupo -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasGroup" aria-labelledby="offcanvasWithBackdropLabel"  >
         <div class="offcanvas-header">
@@ -72,6 +102,46 @@
                     </div>
                 </div>
                 <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterGroup">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Panel lateral para registrar nuevo tema -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTopic" aria-labelledby="offcanvasWithBackdropLabel2"  >
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel2">Register a new topic here</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="frmTopic" class="needs-validation-topic" novalidate>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="inputTitleTopic" class="form-label">Title</label>
+                            <input type="text" name="inputTitleTopic" class="form-control" placeholder="Topic name/title" id="inputTitleTopic" autocomplete="off" required>              
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="inputContentTopic" class="form-label">Content</label>
+                            <textarea class="form-control" placeholder="Leave a content here" id="inputContentTopic" name="inputContentTopic" style="height: 120px" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <center>
+                    <figure class="figure d-none" id="imgPreview">
+                        <img src="#" class="figure-img img-fluid rounded imgPreview">
+                        <figcaption class="figure-caption text-end labelImg">Preview</figcaption>
+                    </figure>
+                </center>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputPhoto"><i class="bi bi-camera-fill"></i></label>
+                    <input type="file" class="form-control" id="inputPhoto">
+                </div>
+
+                <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterTopic">Submit</button>
             </form>
         </div>
     </div>
@@ -144,7 +214,12 @@
             </p>
         </div>
         <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">Recent topics</h6>
+            <h6 class="border-bottom pb-2 mb-0">
+                Recent topics
+                <small class="d-block text-end">
+                    <a href="javascript:void(0);" id="newTopic">New topic</a>
+                </small>
+            </h6>
             
             <small class="d-block text-end mt-3">
                 <a href="javascript:void(0);">All updates</a>
@@ -200,7 +275,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript">
-        var canvasGroup = new bootstrap.Offcanvas( $("#offcanvasGroup") );
+        var canvasGroup         = new bootstrap.Offcanvas( $("#offcanvasGroup") ),
+            canvasTopic         = new bootstrap.Offcanvas( $("#offcanvasTopic") )
+            maxCroppedWidth     = 300,
+            maxCroppedHeight    = 300,
+            topicImage          = null,
+            userData            = <?php echo json_encode($_SESSION['authData']); ?>;
 
         (function () {
             'use strict'
@@ -213,6 +293,12 @@
 
             // Mostrar los 1ros 10 gupos en la barra principal
             listGroup(10, "dvGroupContent");
+
+            // Activar control de edicion de imagenes
+            initComponent();
+
+            // Icia verificacion de foto de perfila
+            $("#newTopic").click( preventTopic);
         })()
 
         // Metodo para registrar nuevo grupo
@@ -263,13 +349,9 @@
 
             let links = "";
             $.post("core/controllers/group.php", _Data, function(result){
-                console.log(result.data);
                 $.each( result.data, function(index, item){
                     links += `<a class="nav-link" href="javascript:void(0);">${item.nombre}</a>`;
                 });
-
-                console.log(links);
-
                 $(links).appendTo(`#${contenedor}`);
             });
         }
@@ -277,14 +359,115 @@
         // Metodo para mostrar una alerta de notificaicon
         // icon: success || error || info
         // text: texto que se mostrara en pantalla
-        function showAlert(icon, text){
+        function showAlert(icon, text, time = 3000){
             Swal.fire({
                 position: 'top-end',
                 icon: icon,
                 text: text,
                 showConfirmButton: false,
-                timer: 3000
+                timer: time
             });
+        }
+
+        // Iniciar componenetes para edicion de imagen
+        function initComponent() {
+            // Controlar tipo de objeto que intentan subir
+            $('input[type="file"]').unbind().change( function(){
+                let ext = $( this ).val().split('.').pop();
+
+                if ($( this ).val() != ''){
+                    if($.inArray(ext, ["jpg", "jpeg", "png", "bmp", "raw", "tiff"]) != -1){
+                        if($(this)[0].files[0].size > 5242880){
+                            $( this ).val('');
+                            showAlert("warning", "Your selected file is larger than 5MB");
+                        }
+                    }else{
+                        $( this ).val('');
+                        showAlert("warning", `${ext} files not allowed, only images`);
+                    }
+                }
+            });
+
+            // Image Cropper
+            let picture = $(".imgPreview"),
+                image       = $("#previewCrop")[0],
+                inputFile1   = $("#inputPhoto")[0],
+                $modal      = $('#modalCrop'),
+                cropper     = null;
+
+            inputFile1.addEventListener("change", function(e){
+                let files = e.target.files,
+                    done  = function (url){
+                        inputFile1.value = "";
+                        image.src = url;
+                        $modal.modal('show');
+                    },
+                    reader,
+                    file,
+                    url;
+
+                if (files && files.length > 0){
+                    file = files[0];
+
+                    if (URL){
+                        done(URL.createObjectURL(file));
+                    }
+                    else if (FileReader){
+                        reader = new FileReader();
+                        reader.onload = function(e){
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            $modal.unbind().on('shown.bs.modal', function(){
+                let URL         = window.URL || window.webkitURL,
+                    container   = document.querySelector('.img-container'),
+                    download    = document.getElementById('download'),
+                    actions     = document.getElementById('cropper-buttons'),
+                    options     = {
+                        viewMode: 1,
+                        aspectRatio: maxCroppedWidth / maxCroppedHeight,
+                        background: false
+                    };
+
+                cropper = new Cropper(image, options);
+            }).on('hidden.bs.modal', function(){
+                cropper.destroy();
+                cropper = null;
+            });
+
+            $("#cropImage").unbind().click( function(){
+                let canvas;
+
+                $modal.modal("hide");
+
+                if(cropper){
+                    canvas = cropper.getCroppedCanvas({
+                        width: maxCroppedWidth,
+                        height: maxCroppedHeight,
+                    });
+
+                    picture
+                        .attr("src", canvas.toDataURL())
+                        .parent().removeClass('d-none');
+
+                    canvas.toBlob(function (blob){
+                        topicImage = blob;
+                    });
+                }
+            });
+        }
+
+        // Metodo para validar la foto de perfil antes de crear un nuevo tema
+        function preventTopic(){
+            if(userData.image != "nothing"){
+                canvasTopic.show();
+            } else {
+                showAlert("warning", "Before posting a topic, you must update your profile picture", 4000);
+            }
         }
     </script>
   </body>

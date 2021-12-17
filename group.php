@@ -185,7 +185,7 @@
             } else {
                 showAlert("warning", "Before posting a topic, you must update your profile picture", 4000);
             }
-        }        
+        }
     }
 
     // Listar los temas activos

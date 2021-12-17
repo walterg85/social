@@ -48,7 +48,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript">
-        base_url = "<?php echo $base_url; ?>";
+        var base_url    = "<?php echo $base_url; ?>",
+            userData    = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
+            isLoged     = <?php echo ($loged) ? 1 : 0; ?>;
     </script>
 
     <style>
@@ -237,9 +239,7 @@
     <script type="text/javascript">
         var canvasGroup         = new bootstrap.Offcanvas( $("#offcanvasGroup") ),
             canvasUser          = new bootstrap.Offcanvas( $("#offcanvasUser") ),
-            cropImage           = null,
-            userData            = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
-            isLoged             = <?php echo ($loged) ? 1 : 0; ?>;
+            cropImage           = null;
 
         (function () {
             'use strict'

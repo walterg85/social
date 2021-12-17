@@ -30,4 +30,50 @@
                 return [FALSE];
             }
         }
+
+        // Mostrar todos los topicos de un grupo
+        public function getTopics($groupId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT 
+                    p.id, 
+                    p.titulo, 
+                    concat(u.name, " ", u.last_name) AS username,
+                    u.id AS userId
+                FROM post p 
+                INNER JOIN user u ON u.id = p.user_id 
+                WHERE p.grupo_id =:groupId
+            ';
+
+            $parametros = array(
+                ':groupId'     => $groupId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Mostrar todos los topicos de la tabla
+        public function getAllTopics(){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT 
+                    p.id, 
+                    p.titulo, 
+                    concat(u.name, " ", u.last_name) AS username,
+                    u.id AS userId
+                FROM post p 
+                INNER JOIN user u ON u.id = p.user_id
+                LIMIT 0, 20
+            ';
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }

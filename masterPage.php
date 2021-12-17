@@ -47,6 +47,10 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script type="text/javascript">
+        base_url = "<?php echo $base_url; ?>";
+    </script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -170,7 +174,7 @@
     <!-- Menu principal -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Offcanvas navbar</a>
+            <a class="navbar-brand" href="<?php echo $base_url; ?>">Social</a>
             <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -178,7 +182,7 @@
             <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                        <a class="nav-link active" aria-current="page" href="<?php echo $base_url; ?>">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Notifications</a>
@@ -236,7 +240,6 @@
             cropImage           = null,
             userData            = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
             isLoged             = <?php echo ($loged) ? 1 : 0; ?>;
-            base_url            = "<?php echo $base_url; ?>";
 
         (function () {
             'use strict'
@@ -317,7 +320,7 @@
                     // Mostrar los 1ros 10 gupos en la barra principal
                     listGroup(10, "dvGroupContent");
                 } else {
-                    showAlert("warning", "Group not registered.");
+                    showAlert("warning", "The group name is already registered.");
                 }
             });
         }

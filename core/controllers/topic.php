@@ -39,6 +39,24 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
+		} else if($put_vars['_method'] == 'GET'){
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->getTopics( $put_vars['groupId'] )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_GetAll'){
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->getAllTopics()
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
 		}
 	}
 

@@ -15,16 +15,16 @@
             ';
 
             $parametros = array(
-                ':nombre' => $data['nombre']          
+                ':nombre' => $data['inputNameGroup']          
             );
             
             try {
                 $sql = $pdo->prepare($cmd);
                 $sql->execute($parametros);
 
-                return TRUE;
+                return $pdo->lastInsertId();
             } catch (PDOException $e) {
-                return FALSE;
+                return 0;
             }
         }
 
@@ -48,5 +48,26 @@
             $sql->execute();
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Metodo para mostrar los detalles de un grupo
+        public function getGroupId($groupId){
+            $pdo = new Conexion();
+            $cmd = '
+                SELECT
+                    id, nombre, fecha_registro, estatus
+                FROM
+                    grupo
+                WHERE id =:id
+            ';
+
+            $parametros = array(
+                ':id' => $groupId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
         }
     }

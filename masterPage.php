@@ -114,6 +114,19 @@
                         </div>
                     </div>
                 </div>
+
+                <center>
+                    <figure class="figure d-none" id="imgPreview">
+                        <img src="#" class="figure-img img-fluid rounded imgPreviewGroup">
+                        <figcaption class="figure-caption text-end labelImg">Preview</figcaption>
+                    </figure>
+                </center>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputPhotoGroup"><i class="bi bi-camera-fill"></i></label>
+                    <input type="file" class="form-control" id="inputPhotoGroup">
+                </div>
+
                 <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterGroup">Submit</button>
             </form>
         </div>
@@ -226,8 +239,8 @@
         <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm">
             <img class="me-3" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo-white.svg" alt="" width="48" height="38">
             <div class="lh-1">
-                <h1 class="h6 mb-0 text-white lh-1">Bootstrap</h1>
-                <small>Since 2011</small>
+                <h1 class="h6 mb-0 text-white lh-1 generalLabel">Bootstrap</h1>
+                <small class="sinceLabel">Since 2011</small>
             </div>
         </div>
 
@@ -280,6 +293,7 @@
                 if(isLoged == 0){
                     window.location.replace("login.html");
                 }else{
+                    initComponent("imgPreviewGroup", "inputPhotoGroup", 900, 400);
                     canvasGroup.show();
                 }
             });
@@ -303,25 +317,37 @@
             if(!continuar)
                 return false;
 
-            let _Data = {
-                "_method": "POST",
-                "nombre": $("#inputNameGroup").val()
-            };
+            let form = $("#frmGroup")[0],
+                formData = new FormData(form);
 
-            $.post(`${base_url}/core/controllers/group.php`, _Data, function(result){
-                if(result.codeResponse == 200){
-                    showAlert("success", "Group registered successfully.");
-                    canvasGroup.hide();
+            formData.append("_method", "POST");
 
-                    // Limpiar formulario
-                    $("#frmGroup").removeClass("was-validated");
-                    $("#inputNameGroup").val("");
+            if(cropImage)
+                formData.append("cropImage", cropImage);
+
+            $.ajax({
+                url: `${base_url}/core/controllers/group.php`,
+                data: formData,
+                type: 'POST',
+                success: function(response){
+                    if(response.codeResponse == 200){
+                        $("#frmGroup").removeClass("was-validated");
+                        showAlert("success", "Group registered successfully.");
+                        canvasGroup.hide();
+                        $("#inputNameGroup").val("");
                     
-                    // Mostrar los 1ros 10 gupos en la barra principal
-                    listGroup(10, "dvGroupContent");
-                } else {
-                    showAlert("warning", "The group name is already registered.");
-                }
+                        // Mostrar los 1ros 10 gupos en la barra principal
+                        listGroup(10, "dvGroupContent");
+                    }else{
+                        showAlert("warning", "The group name is already registered.");
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    showAlert("error", "An error has occurred");
+                },
+                cache: false,
+                contentType: false,
+                processData: false
             });
         }
 

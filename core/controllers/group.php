@@ -13,7 +13,18 @@
 		if($put_vars['_method'] == 'POST'){
 			$tmpResponse = $groupModel->createGroup($put_vars);
 
-			if($tmpResponse){
+			if($tmpResponse > 0){
+				$folder = 'assets/img/group';
+				if( !is_dir(dirname(__FILE__, 3) . "/{$folder}") )
+					mkdir(dirname(__FILE__, 3) . "/{$folder}", 0777, true);
+
+				if (!empty($_FILES['cropImage'])){
+					$filename = $tmpResponse . '.jpg';
+					$tempname = $_FILES['cropImage']['tmp_name'];
+					       
+					move_uploaded_file($tempname, "../../{$folder}/{$filename}");
+				}
+
 				$response = array(
 					'codeResponse' 	=> 200
 				);
@@ -30,6 +41,22 @@
 			$response = array(
 				'codeResponse' 	=> 200,
 				'data' 			=> $groupModel->getGroup($put_vars['limit'])
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_GetUnique'){
+			$data = $groupModel->getGroupId($put_vars['groupId']);
+			$data['image'] = '';
+			
+			$foto = 'assets/img/group/'. $put_vars['groupId'] .'.jpg';
+			if(file_exists('../../' . $foto))
+				$data['image'] = $foto;
+
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $data
 			);
 
 			header('HTTP/1.1 200 Ok');

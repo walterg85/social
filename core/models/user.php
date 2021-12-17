@@ -46,4 +46,29 @@
 
             return $sql->fetch();
         }
+
+        // Metodo para actualizar perfil de usuario
+        public function updateData($data){
+            $pdo = new Conexion();
+            $cmd = '
+                UPDATE user
+                SET name =:name, last_name =:last_name
+                WHERE id =:id
+            ';
+
+            $parametros = array(
+                ':name'         => $data['firstName'],
+                ':last_name'    => $data['lastName'],
+                ':id'           => $data['userId'],
+            );
+
+            try {
+                $sql = $pdo->prepare($cmd);
+                $sql->execute($parametros);
+
+                return TRUE;
+            } catch (PDOException $e) {
+                return FALSE;
+            }
+        }
     }

@@ -59,7 +59,11 @@
 			exit(json_encode($response));
 		} else if($put_vars['_method'] == '_Getunique'){
 			$data = $topicModel->getUnique( $put_vars['topicId'] );
-			$data['image'] = 'assets/img/topic/'. $put_vars['topicId'] .'.jpg';
+			$data['image'] = '';
+			
+			$foto = 'assets/img/topic/'. $put_vars['topicId'] .'.jpg';
+			if(file_exists('../../' . $foto))
+				$data['image'] = $foto;
 
 			$response = array(
 				'codeResponse' 	=> 200,

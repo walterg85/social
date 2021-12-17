@@ -136,7 +136,8 @@
             $cmd = '
                 SELECT
                     c.id, c.user_id, c.post_id, c.fecha_registro, c.comentario, c.estatus,
-                    concat(u.name, " ", u.last_name) AS username
+                    concat(u.name, " ", u.last_name) AS username,
+                    concat("assets/img/user/", u.id, ".jpg") AS userFoto
                 FROM comentario c 
                 INNER JOIN user u ON u.id = c.user_id
             ';

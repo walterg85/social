@@ -16,7 +16,7 @@
 
 <hr>
 
-<div>
+<div id="ctrlComments">
     <div class="form-floating mb-3">
         <textarea class="form-control" placeholder="Leave a comment here" id="txtComentario" style="height: 100px"></textarea>
         <label for="txtComentario">Comments</label>
@@ -26,15 +26,30 @@
     </div>
 </div>
 
-<figure class="d-none blockClone">
-    <blockquote class="blockquote">
-        <p class="fs-6 autor">Name.</p>
-    </blockquote>
-    <figcaption class="blockquote-footer comentario">
-        Coment
-    </figcaption>
-</figure>
-<div id="conetndorComentarios"></div>
+<div class="flex-row mb-3 d-none blockClone">
+    <div class="p-2"><img src="#" width="32" height="32" class="rounded-circle me-2 userImg"></div>
+    <div class="p-2">
+        <figure class="">
+            <blockquote class="blockquote">
+                <p class="fs-6 autor">Name.</p>
+            </blockquote>
+            <figcaption class="blockquote-footer comentario">
+                Coment
+            </figcaption>
+        </figure>
+    </div>
+</div>
+
+
+<div class="row ">
+    <div class="col-md-1">
+        
+    </div>
+    <div class="col-md-11">
+        
+    </div>
+</div>
+<div id="conetndorComentarios" class="mb-5"></div>
 
 <script type="text/javascript">
     let queryString = window.location.search,
@@ -48,6 +63,10 @@
         $("#btnSendComment").click( sendComment);
 
         getTopic();
+        preventTopic();
+
+        let tmpCanvasuser = document.getElementById('offcanvasUser')
+        tmpCanvasuser.addEventListener('hidden.bs.offcanvas', preventTopic);
     })()
 
     // Enviar comentarios del post
@@ -83,10 +102,12 @@
             $.each( data, function(index, item){
                 let objComent = $(".blockClone").clone();
 
-                objComent.find(".autor").html(`${item.username} | ${item.fecha_registro}`);
+                objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
                 objComent.find(".comentario").html(item.comentario);
+                objComent.find(".userImg").attr("src", item.userFoto);
 
                 objComent.removeClass("d-none blockClone");
+                objComent.addClass("d-flex");
 
                 $(objComent).appendTo("#conetndorComentarios");
             });
@@ -106,11 +127,38 @@
             $("#topicName").html(topic.titulo);
             $("#topicDate").html(topic.fecha_registro);
             $("#topicOwner").html(topic.owner);
-            $("#topicImage").attr("src", topic.image);
+
+            if(topic.image == ""){
+                $("#topicImage").addClass("d-none");
+            } else{
+                $("#topicImage").attr("src", topic.image);
+            }
+
             $("#topicContent").html(topic.contenido);
 
             listComents();
         });
+    }
+
+    // Metodo para validar la foto de perfil antes de comentar un tema
+    function preventTopic(){
+        if(isLoged == 0){
+            $("#ctrlComments").addClass("d-none");
+        } else{
+            if(userData.image == "nothing"){
+                $("#txtComentario")
+                    .val("Before comment a topic, you must update your profile picture")
+                    .attr("disabled", "disabled");
+
+                $("#btnSendComment").attr("disabled", "disabled");
+            } else {
+                $("#txtComentario")
+                    .val("")
+                    .removeAttr("disabled");
+
+                $("#btnSendComment").removeAttr("disabled");
+            }
+        }
     }
 </script>
 

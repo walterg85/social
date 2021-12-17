@@ -1,6 +1,7 @@
 <?php
     session_start();
     $loged = TRUE;
+    $base_url = "http://localhost/social";
 
     if(!isset($_SESSION['socialLogin']))
         $loged = FALSE;
@@ -39,6 +40,12 @@
     <link rel="mask-icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
     <link rel="icon" href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#7952b3">
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         .bd-placeholder-img {
@@ -102,46 +109,6 @@
                     </div>
                 </div>
                 <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterGroup">Submit</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Panel lateral para registrar nuevo tema -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTopic" aria-labelledby="offcanvasWithBackdropLabel2"  >
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel2">Register a new topic here</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <form id="frmTopic" class="needs-validation-topic" novalidate>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="inputTitleTopic" class="form-label">Title</label>
-                            <input type="text" name="inputTitleTopic" class="form-control" placeholder="Topic name/title" id="inputTitleTopic" autocomplete="off" required>              
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="inputContentTopic" class="form-label">Content</label>
-                            <textarea class="form-control" placeholder="Leave a content here" id="inputContentTopic" name="inputContentTopic" style="height: 120px" required></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <center>
-                    <figure class="figure d-none" id="imgPreview">
-                        <img src="#" class="figure-img img-fluid rounded imgPreview">
-                        <figcaption class="figure-caption text-end labelImg">Preview</figcaption>
-                    </figure>
-                </center>
-
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputPhoto"><i class="bi bi-camera-fill"></i></label>
-                    <input type="file" class="form-control" id="inputPhoto">
-                </div>
-
-                <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterTopic">Submit</button>
             </form>
         </div>
     </div>
@@ -258,83 +225,18 @@
             </div>
         </div>
 
-        <!-- Lista de temas recientes -->
-        <div class="d-flex text-muted pt-3 d-none topicClone">
-            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-
-            <p class="pb-3 mb-0 small lh-sm border-bottom">
-                <strong class="d-block text-gray-dark">@username</strong>
-                Some representative placeholder content, with some information about this user. Imagine this being some sort of status update, perhaps?
-            </p>
-        </div>
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">
-                Recent topics
-                <small class="d-block text-end">
-                    <a href="javascript:void(0);" id="newTopic">New topic</a>
-                </small>
-            </h6>
-            
-            <small class="d-block text-end mt-3">
-                <a href="javascript:void(0);">All updates</a>
-            </small>
-        </div>
-
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">Suggestions</h6>
-            <div class="d-flex text-muted pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                <div class="d-flex justify-content-between">
-                <strong class="text-gray-dark">Full Name</strong>
-                <a href="#">Follow</a>
-                </div>
-                <span class="d-block">@username</span>
-                </div>
-            </div>
-            <div class="d-flex text-muted pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <div class="d-flex justify-content-between">
-                        <strong class="text-gray-dark">Full Name</strong>
-                        <a href="#">Follow</a>
-                    </div>
-                    <span class="d-block">@username</span>
-                </div>
-            </div>
-            <div class="d-flex text-muted pt-3">
-                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-
-                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                    <div class="d-flex justify-content-between">
-                        <strong class="text-gray-dark">Full Name</strong>
-                        <a href="#">Follow</a>
-                    </div>
-                    <span class="d-block">@username</span>
-                </div>
-            </div>
-            <small class="d-block text-end mt-3">
-                <a href="#">All suggestions</a>
-            </small>
-        </div>
+        <!-- ======= Contenido ======= -->
+        <?php echo $content; ?>
+        <!-- ======= Contenido ======= -->        
     </main>
-
-
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript">
         var canvasGroup         = new bootstrap.Offcanvas( $("#offcanvasGroup") ),
-            canvasTopic         = new bootstrap.Offcanvas( $("#offcanvasTopic") ),
             canvasUser          = new bootstrap.Offcanvas( $("#offcanvasUser") ),
             cropImage           = null,
             userData            = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
             isLoged             = <?php echo ($loged) ? 1 : 0; ?>;
+            base_url            = "<?php echo $base_url; ?>";
 
         (function () {
             'use strict'
@@ -347,9 +249,6 @@
 
             // Mostrar los 1ros 10 gupos en la barra principal
             listGroup(10, "dvGroupContent");
-
-            // Icia verificacion de foto de perfila
-            $("#newTopic").click( preventTopic);
 
             // Activar control de imagen para perfil de usuario
             $("#linkProfile").click( function(){
@@ -364,7 +263,7 @@
 
                     if(userData.image != "nothing"){
                         $(".imgPreviewUser").parent().removeClass("d-none");
-                        $(".imgPreviewUser").attr("src", `${userData.image}`);
+                        $(".imgPreviewUser").attr("src", `${base_url}/${userData.image}`);
                     } else {
                         $(".imgPreviewUser").parent().addClass("d-none");
                     }
@@ -406,7 +305,7 @@
                 "nombre": $("#inputNameGroup").val()
             };
 
-            $.post("core/controllers/group.php", _Data, function(result){
+            $.post(`${base_url}/core/controllers/group.php`, _Data, function(result){
                 if(result.codeResponse == 200){
                     showAlert("success", "Group registered successfully.");
                     canvasGroup.hide();
@@ -433,9 +332,9 @@
             };
 
             let links = "";
-            $.post("core/controllers/group.php", _Data, function(result){
+            $.post(`${base_url}/core/controllers/group.php`, _Data, function(result){
                 $.each( result.data, function(index, item){
-                    links += `<a class="nav-link" href="javascript:void(0);">${item.nombre}</a>`;
+                    links += `<a class="nav-link" href="group.php?id=${item.id}">${item.nombre}</a>`;
                 });
                 $(links).appendTo(`#${contenedor}`);
             });
@@ -546,15 +445,6 @@
             });
         }
 
-        // Metodo para validar la foto de perfil antes de crear un nuevo tema
-        function preventTopic(){
-            if(userData.image != "nothing"){
-                canvasTopic.show();
-            } else {
-                showAlert("warning", "Before posting a topic, you must update your profile picture", 4000);
-            }
-        }
-
         // Metodo para actualizar perfil de usuario
         function updatePerfil(){
             let forms = document.querySelectorAll('.needs-validation-profile'),
@@ -579,13 +469,18 @@
                 formData.append("cropImage", cropImage, `${userData.id}.jpg`);
 
             $.ajax({
-                url: 'core/controllers/user.php',
+                url: `${base_url}/core/controllers/user.php`,
                 data: formData,
                 type: 'POST',
                 success: function(response){
-                    canvasUser.hide();
-                    showAlert("success", "Update data");
-                    userData = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>;
+                    if(response.codeResponse == 200){
+                        $("#frmProfile").removeClass("was-validated");
+                        canvasUser.hide();
+                        showAlert("success", "Update data");
+                        userData = response.data;
+                    }else{
+                        showAlert("error", "An error has occurred");
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     showAlert("error", "An error has occurred");

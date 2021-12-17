@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 16-12-2021 a las 21:56:45
+-- Tiempo de generación: 17-12-2021 a las 02:00:32
 -- Versión del servidor: 8.0.17
 -- Versión de PHP: 7.3.10
 
@@ -103,7 +103,8 @@ ALTER TABLE `comentario`
 -- Indices de la tabla `grupo`
 --
 ALTER TABLE `grupo`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
 -- Indices de la tabla `post`

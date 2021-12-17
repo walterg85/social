@@ -58,15 +58,43 @@
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
 		} else if($put_vars['_method'] == '_Getunique'){
+			$data = $topicModel->getUnique( $put_vars['topicId'] );
+			$data['image'] = 'assets/img/topic/'. $put_vars['topicId'] .'.jpg';
+
 			$response = array(
 				'codeResponse' 	=> 200,
-				'data' 			=> $topicModel->getUnique( $put_vars['topicId'] )
+				'data' 			=> $data
 			);
 
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
-		} 
+		} else if($put_vars['_method'] == '_Setcoments'){
+			$data = array(
+				'comentario'	=> $put_vars['comentario'],
+				'topicId' 		=> $put_vars['topicId'],
+				'userId'		=> $_SESSION['authData']->id
+			);
+			
+			$topicModel->setComments( $data );
+
+			$response = array(
+				'codeResponse' 	=> 200
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_GetComments'){
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->getComments( $put_vars['topicId'] )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		}
 	}
 
 	header('HTTP/1.1 400 Bad Request');

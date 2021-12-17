@@ -149,15 +149,15 @@
     <!-- Panel lateral para edicion de perfil de usuario -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasWithBackdropLabel3"  >
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel3">Your perfil</h5>
+            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel3">Your profile</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <form id="frmTopic" class="needs-validation-topic" novalidate>
+            <form id="frmProfile" class="needs-validation-profile" novalidate>
                 <div class="row mb-3">
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label">First name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required>
                         <div class="invalid-feedback">
                             Valid first name is required.
                         </div>
@@ -165,7 +165,7 @@
 
                     <div class="col-sm-6">
                         <label for="lastName" class="form-label">Last name</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="" required>
                         <div class="invalid-feedback">
                             Valid last name is required.
                         </div>
@@ -242,7 +242,7 @@
     <!-- Grupos -->
     <div class="nav-scroller bg-body shadow-sm">
         <nav class="nav nav-underline" aria-label="Secondary navigation">
-            <a class="nav-link active" aria-current="page" href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvasGroup" aria-controls="offcanvasGroup">New group</a>
+            <a class="nav-link active" aria-current="page" href="javascript:void(0);" id="linkGroup">New group</a>
             <label class="nav-link">|</label>
             <div id="dvGroupContent" class="nav nav-underline"></div>
         </nav>
@@ -333,7 +333,8 @@
             canvasTopic         = new bootstrap.Offcanvas( $("#offcanvasTopic") ),
             canvasUser          = new bootstrap.Offcanvas( $("#offcanvasUser") ),
             cropImage           = null,
-            userData            = <?php echo json_encode($_SESSION['authData']); ?>;
+            userData            = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
+            isLoged             = <?php echo ($loged) ? 1 : 0; ?>;
 
         (function () {
             'use strict'
@@ -352,20 +353,33 @@
 
             // Activar control de imagen para perfil de usuario
             $("#linkProfile").click( function(){
-                initComponent("imgPreviewUser", "inputPhotoUser", 300, 300);
+                if(isLoged == 0){
+                    window.location.replace("login.html");
+                }else{
+                    initComponent("imgPreviewUser", "inputPhotoUser", 300, 300);
 
-                $("#firstName").val( userData.name);
-                $("#lastName").val( userData.last_name);
-                $("#txtEmail").val( userData.email);
+                    $("#firstName").val( userData.name);
+                    $("#lastName").val( userData.last_name);
+                    $("#txtEmail").val( userData.email);
 
-                if(userData.image != "nothing"){
-                    $(".imgPreviewUser").parent().removeClass("d-none");
-                    $(".imgPreviewUser").attr("src", userData.image);
-                } else {
-                    $(".imgPreviewUser").parent().addClass("d-none");
+                    if(userData.image != "nothing"){
+                        $(".imgPreviewUser").parent().removeClass("d-none");
+                        $(".imgPreviewUser").attr("src", `${userData.image}`);
+                    } else {
+                        $(".imgPreviewUser").parent().addClass("d-none");
+                    }
+
+                    canvasUser.show();
                 }
+            });
 
-                canvasUser.show();
+            // Validar si esta registrado antes de registrar un grupo
+            $("#linkGroup").click( function(){
+                if(isLoged == 0){
+                    window.location.replace("login.html");
+                }else{
+                    canvasGroup.show();
+                }
             });
 
             // Disparar evento para actualizar perfil
@@ -542,8 +556,44 @@
         }
 
         // Metodo para actualizar perfil de usuario
-        function updatePerfil(argument) {
-            // body...
+        function updatePerfil(){
+            let forms = document.querySelectorAll('.needs-validation-profile'),
+                continuar = true;
+
+            Array.prototype.slice.call(forms).forEach(function (formv){ 
+                if (!formv.checkValidity())
+                    continuar = false;
+
+                formv.classList.add('was-validated');
+            });
+
+            if(!continuar)
+                return false;
+
+            let form = $("#frmProfile")[0],
+                formData = new FormData(form);
+
+            formData.append("_method", "updateData");
+
+            if(cropImage)
+                formData.append("cropImage", cropImage, `${userData.id}.jpg`);
+
+            $.ajax({
+                url: 'core/controllers/user.php',
+                data: formData,
+                type: 'POST',
+                success: function(response){
+                    canvasUser.hide();
+                    showAlert("success", "Update data");
+                    userData = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>;
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    showAlert("error", "An error has occurred");
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
         }
     </script>
   </body>

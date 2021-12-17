@@ -68,7 +68,41 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
-		} 
+		} else if($put_vars['_method'] == 'updateData'){
+			$setData = array(
+				'firstName'	=> $put_vars['firstName'],
+				'lastName'	=> $put_vars['lastName'],
+				'userId'	=> $_SESSION['authData']->id
+			);
+
+			$tmpResponse = $userModel->updateData($setData);
+			
+			if($tmpResponse){
+				$response = array(
+					'codeResponse'	=> 200
+				);
+
+				$_SESSION['authData']->name 		= $put_vars['firstName'];
+				$_SESSION['authData']->last_name 	= $put_vars['lastName'];
+
+				$folder = "assets/img/user";
+				if (!empty($_FILES['cropImage'])){
+					$filename = $_FILES['cropImage']['name'];
+					$tempname = $_FILES['cropImage']['tmp_name'];
+					       
+					if(move_uploaded_file($tempname, "../../{$folder}/{$filename}"))
+						$_SESSION['authData']->image = "assets/img/user/". $_SESSION['authData']->id . ".jpg";
+				}
+			}else{
+				$response = array(
+					'codeResponse' 	=> 0
+				);
+			}
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		}
 	}
 
 	function encryptPass($strPassword) {

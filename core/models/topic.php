@@ -102,4 +102,48 @@
 
             return $sql->fetch(PDO::FETCH_ASSOC);
         }
+
+        // Registrar un comentario de un tema
+        public function setComments($data){
+            $pdo = new Conexion();
+            $cmd = '
+                INSERT INTO comentario
+                    (user_id, post_id, fecha_registro, comentario, estatus)
+                VALUES
+                    (:user_id, :post_id, now(), :comentario, 1);
+            ';
+
+            $parametros = array(
+                ':user_id'      => $data['userId'],
+                ':post_id'      => $data['topicId'],
+                ':comentario'   => $data['comentario']
+            );
+            
+            try {
+                $sql = $pdo->prepare($cmd);
+                $sql->execute($parametros);
+
+                return TRUE;
+            } catch (PDOException $e) {
+                return FALSE;
+            }
+        }
+
+        // Mostrar todos los comentarios de un post
+        public function getComments($topicId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT
+                    c.id, c.user_id, c.post_id, c.fecha_registro, c.comentario, c.estatus,
+                    concat(u.name, " ", u.last_name) AS username
+                FROM comentario c 
+                INNER JOIN user u ON u.id = c.user_id
+            ';
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }

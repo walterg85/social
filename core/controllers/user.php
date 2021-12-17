@@ -76,16 +76,15 @@
 			);
 
 			$tmpResponse = $userModel->updateData($setData);
-			
-			if($tmpResponse){
-				$response = array(
-					'codeResponse'	=> 200
-				);
 
+			if($tmpResponse){
 				$_SESSION['authData']->name 		= $put_vars['firstName'];
 				$_SESSION['authData']->last_name 	= $put_vars['lastName'];
 
 				$folder = "assets/img/user";
+				if( !is_dir(dirname(__FILE__, 3) . "/{$folder}") )
+					mkdir(dirname(__FILE__, 3) . "/{$folder}", 0777, true);
+				
 				if (!empty($_FILES['cropImage'])){
 					$filename = $_FILES['cropImage']['name'];
 					$tempname = $_FILES['cropImage']['tmp_name'];
@@ -93,6 +92,11 @@
 					if(move_uploaded_file($tempname, "../../{$folder}/{$filename}"))
 						$_SESSION['authData']->image = "assets/img/user/". $_SESSION['authData']->id . ".jpg";
 				}
+
+				$response = array(
+					'codeResponse'	=> 200,
+					'data' 			=> $_SESSION['authData']
+				);
 			}else{
 				$response = array(
 					'codeResponse' 	=> 0

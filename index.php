@@ -13,7 +13,7 @@
 
         <p class="pb-3 mb-0 small lh-sm border-bottom">
             <strong class="d-block text-gray-dark lblAutor">@username</strong>
-            <texto class="lblTitulo"></texto>
+            <a class="lblTitulo text-decoration-none" href="#" id="linkGroup">New group</a>
         </p>
     </div>
 
@@ -85,7 +85,9 @@
                 let topicItem = $(".topicClone").clone();
 
                 topicItem.find(".lblAutor").html(item.username);
-                topicItem.find(".lblTitulo").html(item.titulo);
+                topicItem.find(".lblTitulo")
+                    .html(item.titulo)
+                    .attr("href", `topic.php?id=${item.id}`);
                 topicItem.find(".userImg").attr("src", `${base_url}/assets/img/user/${item.userId}.jpg`);
 
                 topicItem.removeClass("d-none topicClone");
@@ -94,9 +96,6 @@
         });
     }
 </script>
-
-
-
 
 <?php
     // Se obtiene el contenido del bufer

@@ -76,4 +76,30 @@
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        // Mostrar todos los topicos de un grupo
+        public function getUnique($topicId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT 
+                    p.id, 
+                    p.titulo, 
+                    p.contenido,
+                    p.fecha_registro,
+                    concat(u.name, " ", u.last_name) AS owner
+                FROM post p 
+                INNER JOIN user u ON u.id = p.user_id 
+                WHERE p.grupo_id =:topicId
+            ';
+
+            $parametros = array(
+                ':topicId'     => $topicId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
     }

@@ -20,9 +20,9 @@
 				if( !is_dir(dirname(__FILE__, 3) . "/{$folder}") )
 					mkdir(dirname(__FILE__, 3) . "/{$folder}", 0777, true);
 
-				if (!empty($_FILES['cropImage'])){
+				if (!empty($_FILES['inputPhotoTopic'])){
 					$filename = $tmpResponse[1] . ".jpg";
-					$tempname = $_FILES['cropImage']['tmp_name'];
+					$tempname = $_FILES['inputPhotoTopic']['tmp_name'];
 					       
 					move_uploaded_file($tempname, "../../{$folder}/{$filename}");
 				}

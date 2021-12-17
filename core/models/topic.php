@@ -90,7 +90,7 @@
                     concat(u.name, " ", u.last_name) AS owner
                 FROM post p 
                 INNER JOIN user u ON u.id = p.user_id 
-                WHERE p.grupo_id =:topicId
+                WHERE p.id =:topicId
             ';
 
             $parametros = array(
@@ -140,10 +140,15 @@
                     concat("assets/img/user/", u.id, ".jpg") AS userFoto
                 FROM comentario c 
                 INNER JOIN user u ON u.id = c.user_id
+                WHERE c.post_id =:topicId
             ';
 
+            $parametros = array(
+                'topicId' => $topicId
+            );
+
             $sql = $pdo->prepare($cmd);
-            $sql->execute();
+            $sql->execute($parametros);
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }

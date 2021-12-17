@@ -26,22 +26,19 @@
                 </div>
             </div>
 
-            <center>
-                <figure class="figure d-none" id="imgPreview">
-                    <img src="#" class="figure-img img-fluid rounded imgPreviewTopic">
-                    <figcaption class="figure-caption text-end labelImg">Preview</figcaption>
-                </figure>
-            </center>
-
             <div class="input-group mb-3">
-                <label class="input-group-text" for="inputPhoto"><i class="bi bi-camera-fill"></i></label>
-                <input type="file" class="form-control" id="inputPhotoTopic">
+                <label class="input-group-text" for="inputPhotoTopic"><i class="bi bi-camera-fill"></i></label>
+                <input type="file" class="form-control" id="inputPhotoTopic" name="inputPhotoTopic">
             </div>
 
             <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterTopic">Submit</button>
         </form>
     </div>
 </div>
+
+<center>
+    <img src="#" class="img-fluid" alt="Topic image" id="groupImage">
+</center>
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">
@@ -124,6 +121,9 @@
 
         // Listar las temas
         listTopics();
+
+        // Mostrar detalles del grupo
+        getDetail();
     })()
 
     // Metodo para actualizar perfil de usuario
@@ -180,7 +180,6 @@
             window.location.replace("login.html");
         } else{
             if(userData.image != "nothing"){
-                initComponent("imgPreviewTopic", "inputPhotoTopic", 900, 400);
                 canvasTopic.show();
             } else {
                 showAlert("warning", "Before posting a topic, you must update your profile picture", 4000);
@@ -210,6 +209,27 @@
                 topicItem.removeClass("d-none topicClone");
                 $(topicItem).appendTo(`#dvContenedorTopics`);
             });
+        });
+    }
+
+    // Buscar los detalles del grupo seleccionado
+    function getDetail(){
+        let _Data = {
+            "_method": "_GetUnique",
+            "groupId": groupId
+        };
+
+        $.post(`${base_url}/core/controllers/group.php`, _Data, function(result){
+            let data = result.data;
+
+            if(data.image != ""){
+                $("#groupImage").attr("src", data.image);
+            } else {
+                $("#groupImage").addClass("d-none");
+            }
+
+            $(".generalLabel").html(data.nombre);
+            $(".sinceLabel").html(`Since ${data.fecha_registro}`);
         });
     }
 </script>

@@ -152,4 +152,47 @@
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        // Metodo para setear un like al post
+        public function setLike($data){
+            $pdo = new Conexion();
+            $cmd = '
+                INSERT INTO postlike
+                    (user_id, post_id, date_registered)
+                VALUES
+                    (:user_id, :post_id, now());
+            ';
+
+            $parametros = array(
+                ':user_id'      => $data['userId'],
+                ':post_id'     => $data['topicId']
+            );
+            
+            try {
+                $sql = $pdo->prepare($cmd);
+                $sql->execute($parametros);
+
+                return TRUE;
+            } catch (PDOException $e) {
+                return FALSE;
+            }
+        }
+
+        // Metodo para consultar si ya indico un like al post
+        public function getLikes($data){
+            $pdo = new Conexion();
+            $cmd = '
+                SELECT COUNT(id) AS existe FROM postlike WHERE user_id =:user_id AND post_id =:post_id
+            ';
+
+            $parametros = array(
+                ':user_id'      => $data['userId'],
+                ':post_id'     => $data['topicId']
+            );
+            
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
     }

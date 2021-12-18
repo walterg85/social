@@ -5,6 +5,7 @@
 
 <h3 id="topicName">Sample blog post</h3>
 <p class="text-muted"><text id="topicDate">January 1, 2021</text> by <a href="javascript:void(0);" class="text-decoration-none" id="topicOwner">Mark</a></p>
+<button type="button" id="btnILike" class="btn btn-outline-secondary"><i class="bi bi-heart-fill"></i> I like</button>
 
 <center>
     <img src="#" class="img-fluid" alt="Topic image" id="topicImage" style="height: 300px !important">
@@ -67,6 +68,10 @@
 
         let tmpCanvasuser = document.getElementById('offcanvasUser')
         tmpCanvasuser.addEventListener('hidden.bs.offcanvas', preventTopic);
+
+        $("#btnILike").click( fnSetLike);
+
+        getLikes();
     })()
 
     // Enviar comentarios del post
@@ -159,6 +164,34 @@
                 $("#btnSendComment").removeAttr("disabled");
             }
         }
+    }
+
+    // Metodo para consultar si el usuario actual ya ha dado like al post actual
+    function getLikes(){
+        let _Data = {
+            "_method": "_GetLikes",
+            "topicId": topicId
+        };
+
+        $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+            if(result.data.existe == 1){
+                $("#btnILike")
+                    .html(`<i class="bi bi-heart-fill text-danger"></i> I like`)
+                    .unbind();
+            }
+        });
+    }
+
+    // Metodo para enviar like al post actual
+    function fnSetLike(){
+        let _Data = {
+            "_method": "_SetLikes",
+            "topicId": topicId
+        };
+
+        $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+            getLikes();
+        });
     }
 </script>
 

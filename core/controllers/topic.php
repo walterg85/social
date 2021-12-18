@@ -98,6 +98,34 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_SetLikes'){
+			$data = array(
+				'topicId'	=> $put_vars['topicId'],
+				'userId'	=> $_SESSION['authData']->id
+			);
+
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->setLike( $data )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_GetLikes'){
+			$data = array(
+				'topicId'	=> $put_vars['topicId'],
+				'userId'	=> $_SESSION['authData']->id
+			);
+
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->getLikes( $data )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
 		}
 	}
 

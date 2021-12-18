@@ -7,7 +7,7 @@
 <p class="text-muted"><text id="topicDate">January 1, 2021</text> by <a href="javascript:void(0);" class="text-decoration-none" id="topicOwner">Mark</a></p>
 
 <center>
-    <img src="#" class="img-fluid" alt="Topic image" id="topicImage">
+    <img src="#" class="img-fluid" alt="Topic image" id="topicImage" style="height: 300px !important">
 </center>
 
 <hr>

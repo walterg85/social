@@ -186,6 +186,17 @@
         </div>
     </div>
 
+    <!-- Panel lateral para Mostrar los resultados de la busqueda -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvaSearch" aria-labelledby="offcanvasWithBackdropLabel9"  >
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel9">Search results</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="searchResult"></div>
+        </div>
+    </div>
+
     <!-- Menu principal -->
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
@@ -218,8 +229,13 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <div class="dropdown">
+                        <input type="search" class="form-control dropdown-toggle" id="inputSearch" placeholder="Type to Search..." autocomplete="off" >
+                        <ul class="dropdown-menu" id="cboResult" aria-labelledby="inputSearch"></ul>
+                    </div>
+
+                    <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="txtSearch">
+                    <button class="btn btn-outline-success" type="button" id="btnSearch" data-bs-toggle="offcanvas" href="#offcanvaSearch">Search</button> -->
                 </form>
             </div>
         </div>
@@ -252,7 +268,8 @@
     <script type="text/javascript">
         var canvasGroup         = new bootstrap.Offcanvas( $("#offcanvasGroup") ),
             canvasUser          = new bootstrap.Offcanvas( $("#offcanvasUser") ),
-            cropImage           = null;
+            cropImage           = null,
+            searchRequest       = null;
 
         (function () {
             'use strict'
@@ -300,6 +317,55 @@
 
             // Disparar evento para actualizar perfil
             $("#btnUpdateProfile").click( updatePerfil);
+
+            // Control para busqueda
+            $('#inputSearch').keyup(function(){
+                if(searchRequest)
+                    searchRequest.abort();
+
+                searchRequest = $.ajax({
+                    url:`${base_url}/core/controllers/user.php`,
+                    method:"POST",
+                    data:{
+                        "_method": "search",
+                        "parameter": $("#inputSearch").val()
+                    },
+                    success:function(data){
+                        console.log(data);
+                        let items = '',
+                            corte = '';
+                        $.each(data.data, function(index, item){
+                            if(corte != item.tipo){
+                                items += `<h6 class="dropdown-header"><strong>${item.tipo}</strong></h6>`;
+                                corte = item.tipo;
+                            }
+
+                            items += `
+                                <li>
+                                    <a class="dropdown-item" href="${base_url}/${item.tipo}.php?id=${item.id}">
+                                        ${item.texto}
+                                    </a>
+                                </li>
+                            `;
+                        });
+
+                        $("#cboResult")
+                            .html(items)
+                            .addClass("show");
+                    }
+                });
+            });
+
+            $('body').click(function() {
+                if(searchRequest)
+                    searchRequest.abort();
+
+                $("#cboResult")
+                    .html("")
+                    .removeClass("show");
+
+                // $("#inputSearch").val("");
+            });
         })()
 
         // Metodo para registrar nuevo grupo

@@ -71,4 +71,24 @@
                 return FALSE;
             }
         }
+
+        // Metodo para buscar segun lo ingresado en el from del search
+        public function getData($parameter){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT id, nombre AS texto, "group" AS tipo FROM `grupo` WHERE nombre LIKE "%'. str_replace(' ', '%', $parameter) .'%"
+                UNION
+                SELECT id, titulo AS texto, "topic" AS tipo FROM `post` WHERE titulo LIKE "%'. str_replace(' ', '%', $parameter) .'%"
+                UNION
+                select id, texto, tipo from (
+                    SELECT id, CONCAT(name, " ", last_name) AS texto, "user" AS tipo FROM `user`
+                ) universo WHERE texto LIKE "%'. str_replace(' ', '%', $parameter) .'%"
+            ';
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }

@@ -102,7 +102,7 @@
     <!-- Panel lateral para registrar nuevo grupo -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasGroup" aria-labelledby="offcanvasWithBackdropLabel"  >
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Register a new group here</h5>
+            <h5 class="offcanvas-title labelTitulo" id="offcanvasWithBackdropLabel">Register a new group here</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -110,7 +110,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-3">
-                            <label for="inputNameGroup" class="form-label">Name</label>
+                            <label for="inputNameGroup" class="form-label labelNombre">Name</label>
                             <input type="text" name="inputNameGroup" class="form-control" id="inputNameGroup" autocomplete="off" required>              
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                     <input type="file" class="form-control" id="inputPhotoGroup">
                 </div>
 
-                <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterGroup">Submit</button>
+                <button type="button" class="w-100 btn btn-lg btn-success labelBoton" id="btnRegisterGroup">Submit</button>
             </form>
         </div>
     </div>
@@ -136,24 +136,24 @@
     <!-- Panel lateral para edicion de perfil de usuario -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUser" aria-labelledby="offcanvasWithBackdropLabel3"  >
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel3">Your profile</h5>
+            <h5 class="offcanvas-title labelTitulo2" id="offcanvasWithBackdropLabel3">Your profile</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <form id="frmProfile" class="needs-validation-profile" novalidate>
                 <div class="row mb-3">
                     <div class="col-sm-6">
-                        <label for="firstName" class="form-label">First name</label>
+                        <label for="firstName" class="form-label labelFisrtname">First name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required>
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback labelErrornombre">
                             Valid first name is required.
                         </div>
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="lastName" class="form-label">Last name</label>
+                        <label for="lastName" class="form-label labelLastname">Last name</label>
                         <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="" required>
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback labelErrorapellido">
                             Valid last name is required.
                         </div>
                     </div>
@@ -161,7 +161,7 @@
 
                 <div class="row mb-3">
                     <div class="col-sm-12">
-                        <label for="txtEmail" class="form-label">E-mail</label>
+                        <label for="txtEmail" class="form-label labelEmail">E-mail</label>
                         <input type="email" class="form-control" id="txtEmail" placeholder="" value="" readonly>
                     </div>
                 </div>
@@ -182,19 +182,8 @@
                     <input type="file" class="form-control" id="inputPhotoUser">
                 </div>
 
-                <button type="button" class="w-100 btn btn-lg btn-success" id="btnUpdateProfile">Submit</button>
+                <button type="button" class="w-100 btn btn-lg btn-success labelBoton" id="btnUpdateProfile">Submit</button>
             </form>
-        </div>
-    </div>
-
-    <!-- Panel lateral para Mostrar los resultados de la busqueda -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvaSearch" aria-labelledby="offcanvasWithBackdropLabel9"  >
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel9">Search results</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div id="searchResult"></div>
         </div>
     </div>
 
@@ -244,7 +233,7 @@
     <!-- Grupos -->
     <div class="nav-scroller bg-body shadow-sm">
         <nav class="nav nav-underline" aria-label="Secondary navigation">
-            <a class="nav-link active" aria-current="page" href="javascript:void(0);" id="linkGroup">New group</a>
+            <a class="nav-link active labaelGrupos" aria-current="page" href="javascript:void(0);" id="linkGroup">New group</a>
             <label class="nav-link">|</label>
             <div id="dvGroupContent" class="nav nav-underline"></div>
         </nav>
@@ -622,8 +611,9 @@
                     let objVotacion = $(".votacionClone").clone();
 
                     objVotacion.find(".votacionImg").attr("src", `assets/img/user/${item.id}.jpg`);
-                    objVotacion.find(".votacionName").html(`${item.nombre} | ${item.titulo}`);
-                    objVotacion.find(".votacionLink").attr("href", `topic.php?id=${item.post_id}`);
+                    objVotacion.find(".votacionName")
+                        .attr("href", `topic.php?id=${item.post_id}`)
+                        .html(`${item.nombre} | ${item.titulo}`);
                     objVotacion.find(".votacionOwner").html(`${item.owner}`);
 
                     objVotacion.removeClass("d-none votacionClone");
@@ -638,13 +628,29 @@
         function switchLanguage() {
             $.post(`${base_url}/assets/lang.json`, {}, function(languages) {
                 let menuPrincipal = languages[lang]["menu_principal"];
-
                 $(`.labelDashboard`).html(menuPrincipal.labelDashboard);
                 $(`.labelProfile`).html(menuPrincipal.labelProfile);
                 $(`.labelLogout`).html(menuPrincipal.labelLogout);
                 $(`.labelLogin`).html(menuPrincipal.labelLogin);
                 $(`.labelSearch`).attr("placeholder", menuPrincipal.labelSearch);
                 $(`.labelTranslate`).html(menuPrincipal.labelTranslate);
+                $(`.labaelGrupos`).html(menuPrincipal.labaelGrupos);
+
+                let panelGrupo = languages[lang]["panelGrupo"];
+                $(`.labelTitulo`).html(panelGrupo.labelTitulo);
+                $(`.labelNombre`).html(panelGrupo.labelNombre);
+                $(`.labelBoton`).html(panelGrupo.labelBoton);
+                $(`.labelImg`).html(panelGrupo.labelImg);
+
+                let panelPerfil = languages[lang]["panelPerfil"];
+                $(`.labelTitulo2`).html(panelPerfil.labelTitulo);
+                $(`.labelFisrtname`).html(panelPerfil.labelFisrtname);
+                $(`.labelLastname`).html(panelPerfil.labelLastname);
+                $(`.labelEmail`).html(panelPerfil.labelEmail);
+                $(`.labelErrornombre`).html(panelPerfil.labelErrornombre);
+                $(`.labelErrorapellido`).html(panelPerfil.labelErrorapellido);
+
+                switchPage();
             });
         }
     </script>

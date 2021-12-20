@@ -6,7 +6,7 @@
 <!-- Panel lateral para registrar nuevo tema -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTopic" aria-labelledby="offcanvasWithBackdropLabel2"  >
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel2">Register a new topic here</h5>
+        <h5 class="offcanvas-title panelTopicTitulo" id="offcanvasWithBackdropLabel2">Register a new topic here</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -14,13 +14,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="mb-3">
-                        <label for="inputTitleTopic" class="form-label">Title</label>
+                        <label for="inputTitleTopic" class="form-label panelTopicCampo1">Title</label>
                         <input type="text" name="inputTitleTopic" class="form-control" placeholder="Topic name/title" id="inputTitleTopic" autocomplete="off" required>              
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="mb-3">
-                        <label for="inputContentTopic" class="form-label">Content</label>
+                        <label for="inputContentTopic" class="form-label panelTopicCampo2">Content</label>
                         <textarea class="form-control" placeholder="Leave a content here" id="inputContentTopic" name="inputContentTopic" style="height: 120px" required></textarea>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <input type="file" class="form-control" id="inputPhotoTopic" name="inputPhotoTopic">
             </div>
 
-            <button type="button" class="w-100 btn btn-lg btn-success" id="btnRegisterTopic">Submit</button>
+            <button type="button" class="w-100 btn btn-lg btn-success labelBoton" id="btnRegisterTopic">Submit</button>
         </form>
     </div>
 </div>
@@ -41,7 +41,7 @@
 </center>
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h6 class="border-bottom pb-2 mb-0">Suggestions</h6>
+    <h6 class="border-bottom pb-2 mb-0 labelSugerencia">Suggestions</h6>
     <div class="text-muted pt-3 d-none votacionClone">
         <img src="#" width="32" height="32" class="rounded-circle me-2 votacionImg">
         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
@@ -59,9 +59,9 @@
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">
-        Recent topics
+        <texto class="labelRecientes">Recent topics</texto>
         <small class="d-block text-end">
-            <a href="javascript:void(0);" id="newTopic">New topic</a>
+            <a href="javascript:void(0);" class="lableNuevotema" id="newTopic">New topic</a>
         </small>
     </h6>
 
@@ -101,6 +101,23 @@
 
         // Mostrar detalles del grupo
         getDetail();
+
+        // Validar solo carga tipo fotos
+        $('input[type="file"]').change( function(){
+            let ext = $( this ).val().split('.').pop();
+
+            if ($( this ).val() != ''){
+                if($.inArray(ext, ["jpg", "jpeg", "png", "bmp", "raw", "tiff"]) != -1){
+                    if($(this)[0].files[0].size > 5242880){
+                        $( this ).val('');
+                        showAlert("warning", "Your selected file is larger than 5MB");
+                    }
+                }else{
+                    $( this ).val('');
+                    showAlert("warning", `${ext} files not allowed, only images`);
+                }
+            }
+        });
     })()
 
     // Metodo para actualizar perfil de usuario
@@ -210,6 +227,21 @@
 
             $(".generalLabel").html(data.nombre);
             $(".sinceLabel").html(`Since ${data.fecha_registro}`);
+        });
+    }
+
+    // Metodo para traducir la pagina
+    function switchPage() {
+        $.post(`${base_url}/assets/lang.json`, {}, function(languages) {
+            let panelTopic = languages[lang]["panelTopic"];
+            $(`.panelTopicTitulo`).html(panelTopic.panelTopicTitulo);
+            $(`.panelTopicCampo1`).html(panelTopic.panelTopicCampo1);
+            $(`.panelTopicCampo2`).html(panelTopic.panelTopicCampo2);
+            $(`.lableNuevotema`).html(panelTopic.lableNuevotema);
+
+            let lblindex = languages[lang]["index"];
+            $(`.labelSugerencia`).html(lblindex.labelSugerencia);
+            $(`.labelRecientes`).html(lblindex.labelRecientes);
         });
     }
 </script>

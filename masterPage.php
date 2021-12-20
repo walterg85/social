@@ -83,7 +83,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabelP">Edit / Crop the image</h5>
+                    <h5 class="modal-title labelModalTitulo" id="modalLabelP">Edit / Crop the image</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -92,8 +92,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btnmdlC" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="cropImage">Apply</button>
+                    <button type="button" class="btn btn-secondary labelModalBoton1" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger labelModalBoton2" id="cropImage">Apply</button>
                 </div>
             </div>
         </div>
@@ -649,6 +649,11 @@
                 $(`.labelEmail`).html(panelPerfil.labelEmail);
                 $(`.labelErrornombre`).html(panelPerfil.labelErrornombre);
                 $(`.labelErrorapellido`).html(panelPerfil.labelErrorapellido);
+
+                let modal = languages[lang]["modal"];
+                $(`.labelModalTitulo`).html(modal.labelModalTitulo);
+                $(`.labelModalBoton1`).html(modal.labelModalBoton1);
+                $(`.labelModalBoton2`).html(modal.labelModalBoton2);
 
                 switchPage();
             });

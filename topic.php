@@ -4,8 +4,8 @@
 ?>
 
 <h3 id="topicName">Sample blog post</h3>
-<p class="text-muted"><text id="topicDate">January 1, 2021</text> by <a href="javascript:void(0);" class="text-decoration-none" id="topicOwner">Mark</a></p>
-<button type="button" id="btnILike" class="btn btn-outline-secondary"><i class="bi bi-heart-fill"></i> I like</button>
+<p class="text-muted"><text id="topicDate">January 1, 2021</text> <text class="labelBy">by</text> <a href="javascript:void(0);" class="text-decoration-none" id="topicOwner">Mark</a></p>
+<button type="button" id="btnILike" class="btn btn-outline-secondary labelLike"><i class="bi bi-heart-fill"></i> I like</button>
 
 <center>
     <img src="#" class="img-fluid" alt="Topic image" id="topicImage" style="height: 300px !important">
@@ -20,10 +20,10 @@
 <div id="ctrlComments">
     <div class="form-floating mb-3">
         <textarea class="form-control" placeholder="Leave a comment here" id="txtComentario" style="height: 100px"></textarea>
-        <label for="txtComentario">Comments</label>
+        <label for="txtComentario" class="labelComentario">Comments</label>
     </div>
      <div class="d-md-flex justify-content-md-end">
-        <button class="btn btn-success btn-block pull-right" id="btnSendComment">Send comment</button>
+        <button class="btn btn-success btn-block pull-right labelEnviarcomentario" id="btnSendComment">Send comment</button>
     </div>
 </div>
 
@@ -55,7 +55,8 @@
 <script type="text/javascript">
     let queryString = window.location.search,
         urlParams   = new URLSearchParams(queryString),
-        topicId     = urlParams.get('id');
+        topicId     = urlParams.get('id'),
+        labelLike   = "";
 
     (function () {
         'use strict'
@@ -70,8 +71,6 @@
         tmpCanvasuser.addEventListener('hidden.bs.offcanvas', preventTopic);
 
         $("#btnILike").click( fnSetLike);
-
-        getLikes();
     })()
 
     // Enviar comentarios del post
@@ -177,8 +176,10 @@
         $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
             if(result.data.existe == 1){
                 $("#btnILike")
-                    .html(`<i class="bi bi-heart-fill text-danger"></i> I like`)
+                    .html(`<i class="bi bi-heart-fill text-danger"></i> ${labelLike}`)
                     .unbind();
+            } else {
+                $("#btnILike").html(`<i class="bi bi-heart-fill"></i> ${labelLike}`);
             }
         });
     }
@@ -191,6 +192,19 @@
         };
 
         $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+            getLikes();
+        });
+    }
+
+    // Metodo para traducir la pagina
+    function switchPage() {
+        $.post(`${base_url}/assets/lang.json`, {}, function(languages) {
+            let panelTopic = languages[lang]["topic"];
+            $(`.labelBy`).html(panelTopic.labelBy);
+            labelLike = panelTopic.labelLike;
+            $(`.labelComentario`).html(panelTopic.labelComentario);
+            $(`.labelEnviarcomentario`).html(panelTopic.labelEnviarcomentario);
+
             getLikes();
         });
     }

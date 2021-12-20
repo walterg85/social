@@ -195,4 +195,28 @@
 
             return $sql->fetch(PDO::FETCH_ASSOC);
         }
+
+        // Metodo para mostrar los 10 temas mas votados
+        public function getVotacion($groupId){
+            $pdo = new Conexion();
+            $subWhere = '';
+
+            if($groupId > 0)
+                $subWhere = ' WHERE g.id = '. $groupId . ' ';
+
+            $cmd = '
+                SELECT 
+                    universo.votacion, p.titulo, g.nombre, universo.post_id, CONCAT(u.name, " ", u.last_name) as owner, u.id
+                FROM 
+                    (SELECT COUNT(id) AS votacion, post_id FROM postlike GROUP by post_id ORDER BY 1 DESC LIMIT 0,10) universo
+                INNER JOIN post p ON p.id = universo.post_id
+                INNER JOIN grupo g ON g.id = p.grupo_id
+                INNER JOIN user u ON u.id = p.user_id
+            ' . $subWhere;
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }

@@ -23,9 +23,26 @@
 			"labelErrornombre": "Valid first name is required.",
 			"labelErrorapellido": "Valid last name is required."
 		},
+		"modal":{
+			"labelModalTitulo": "Edit / Crop the image",
+			"labelModalBoton1": "Cancel",
+			"labelModalBoton2": "Apply"
+		},
 		"index":{
 			"labelSugerencia": "Suggestions",
 			"labelRecientes": "Recent topics"
+		},
+		"panelTopic":{
+			"panelTopicTitulo": "Register a new topic here",
+			"panelTopicCampo1": "Title",
+			"panelTopicCampo2": "Content",
+			"lableNuevotema": "New topic"
+		},
+		"topic":{
+			"labelBy": "by",
+			"labelLike": "I like",
+			"labelComentario": "Comments",
+			"labelEnviarcomentario": "Send comment"
 		}
 	},
 	"es":{
@@ -52,9 +69,26 @@
 			"labelErrornombre": "Este dato es requerido",
 			"labelErrorapellido": "Este dato es requerido"
 		},
+		"modal":{
+			"labelModalTitulo": "Editar la imagen",
+			"labelModalBoton1": "Cancelar",
+			"labelModalBoton2": "Aplicar"
+		},
 		"index":{
 			"labelSugerencia": "Sugerencias",
 			"labelRecientes": "Temas recientes"
+		},
+		"panelTopic":{
+			"panelTopicTitulo": "Registrar un nuevo tema",
+			"panelTopicCampo1": "Titulo",
+			"panelTopicCampo2": "Contenido",
+			"lableNuevotema": "Nuevo tema"
+		},
+		"topic":{
+			"labelBy": "autor",
+			"labelLike": "Me gusta",
+			"labelComentario": "Comentarios",
+			"labelEnviarcomentario": "Enviar comentarios"
 		}
 	}
 }

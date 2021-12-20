@@ -50,7 +50,8 @@
     <script type="text/javascript">
         var base_url    = "<?php echo $base_url; ?>",
             userData    = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
-            isLoged     = <?php echo ($loged) ? 1 : 0; ?>;
+            isLoged     = <?php echo ($loged) ? 1 : 0; ?>,
+            lang        = (window.navigator.language).substring(0,2);
     </script>
 
     <style>
@@ -208,45 +209,33 @@
             <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo $base_url; ?>">Dashboard</a>
+                        <a class="nav-link active labelDashboard" aria-current="page" href="<?php echo $base_url; ?>">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Notifications</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0);" id="linkProfile">Profile</a>
+                        <a class="nav-link labelProfile" href="javascript:void(0);" id="linkProfile">Profile</a>
                     </li>
                     <?php
                         if($loged == TRUE){
                             echo '
                                 <li class="nav-item">
-                                    <a class="nav-link" href="logout.php">Log out</a>
+                                    <a class="nav-link labelLogout" href="logout.php">Log out</a>
                                 </li>
                             ';
                         } else {
                             echo '<li class="nav-item">
-                                    <a class="nav-link" href="login.html">Login to account</a>
+                                    <a class="nav-link labelLogin" href="login.html">Login to account</a>
                                 </li>';
                         }
                     ?>
-                    
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link labelTranslate" href="javascript:void(0);"><i class="bi bi-shuffle"></i> Español</a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <div class="dropdown">
-                        <input type="search" class="form-control dropdown-toggle" id="inputSearch" placeholder="Type to Search..." autocomplete="off" >
+                        <input type="search" class="form-control dropdown-toggle labelSearch" id="inputSearch" placeholder="Type to Search..." autocomplete="off" >
                         <ul class="dropdown-menu" id="cboResult" aria-labelledby="inputSearch"></ul>
                     </div>
-
-                    <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="txtSearch">
-                    <button class="btn btn-outline-success" type="button" id="btnSearch" data-bs-toggle="offcanvas" href="#offcanvaSearch">Search</button> -->
                 </form>
             </div>
         </div>
@@ -377,6 +366,28 @@
 
                 // $("#inputSearch").val("");
             });
+
+            // Control de idioma
+            if( localStorage.getItem("socialCurrentLag") ){
+                lang = localStorage.getItem("socialCurrentLag");
+            }else{
+                localStorage.setItem("socialCurrentLag", lang);
+            }
+
+            $(".labelTranslate").click( function(){
+                if (localStorage.getItem("socialCurrentLag") == "es") {
+                    localStorage.setItem("socialCurrentLag", "en");
+                    lang = "en";
+                }else{
+                    localStorage.setItem("socialCurrentLag", "es");
+                    lang = "es";
+                }
+
+                switchLanguage();
+            });
+
+            switchLanguage();
+            // Fin control de idioma
         })()
 
         // Metodo para registrar nuevo grupo
@@ -620,6 +631,20 @@
 
                     $(objVotacion).appendTo(`#dvContenedorVotacion`);
                 });                
+            });
+        }
+
+        // Metodo para traducir el sitio web
+        function switchLanguage() {
+            $.post(`${base_url}/assets/lang.json`, {}, function(languages) {
+                let menuPrincipal = languages[lang]["menu_principal"];
+
+                $(`.labelDashboard`).html(menuPrincipal.labelDashboard);
+                $(`.labelProfile`).html(menuPrincipal.labelProfile);
+                $(`.labelLogout`).html(menuPrincipal.labelLogout);
+                $(`.labelLogin`).html(menuPrincipal.labelLogin);
+                $(`.labelSearch`).attr("placeholder", menuPrincipal.labelSearch);
+                $(`.labelTranslate`).html(menuPrincipal.labelTranslate);
             });
         }
     </script>

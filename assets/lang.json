@@ -6,7 +6,26 @@
 			"labelLogout": "Log out",
 			"labelLogin": "Login",
 			"labelSearch": "Type to Search...",
-			"labelTranslate": "<i class='bi bi-shuffle'></i> Español"
+			"labelTranslate": "<i class='bi bi-shuffle'></i> Español",
+			"labaelGrupos": "New group"
+		},
+		"panelGrupo":{
+			"labelTitulo": "Register a new group here",
+			"labelNombre": "Name",
+			"labelBoton": "Submit",
+			"labelImg": "Preview"
+		},
+		"panelPerfil":{
+			"labelTitulo": "Your profile",
+			"labelFisrtname":"First name",
+			"labelLastname": "Last name",
+			"labelEmail": "E-mail",
+			"labelErrornombre": "Valid first name is required.",
+			"labelErrorapellido": "Valid last name is required."
+		},
+		"index":{
+			"labelSugerencia": "Suggestions",
+			"labelRecientes": "Recent topics"
 		}
 	},
 	"es":{
@@ -16,7 +35,26 @@
 			"labelLogout": "Cerrar sesión",
 			"labelLogin": "Iniciar sesión",
 			"labelSearch": "Escribe para buscar",
-			"labelTranslate": "<i class='bi bi-shuffle'></i> English"
+			"labelTranslate": "<i class='bi bi-shuffle'></i> English",
+			"labaelGrupos": "Nuevo grupo"
+		},
+		"panelGrupo":{
+			"labelTitulo": "Registra un nuevo grupo",
+			"labelNombre": "Nombre",
+			"labelBoton": "Enviar",
+			"labelImg": "Vista previa"
+		},
+		"panelPerfil":{
+			"labelTitulo": "Perfil de usuario",
+			"labelFisrtname":"Nombre",
+			"labelLastname": "Apellido",
+			"labelEmail": "Correo electronico",
+			"labelErrornombre": "Este dato es requerido",
+			"labelErrorapellido": "Este dato es requerido"
+		},
+		"index":{
+			"labelSugerencia": "Sugerencias",
+			"labelRecientes": "Temas recientes"
 		}
 	}
 }

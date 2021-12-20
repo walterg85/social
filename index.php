@@ -2,9 +2,25 @@
     // Se inicia el metodo para encapsular todo el contenido de las paginas (bufering), para dar salida al HTML 
     ob_start();
 ?>
+<div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0 labelSugerencia">Suggestions</h6>
+    <div class="text-muted pt-3 d-none votacionClone">
+        <img src="#" width="32" height="32" class="rounded-circle me-2 votacionImg">
+        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <a class="votacionName text-decoration-none" href="#" id="linkGroup"></a>
+            <span class="d-block votacionOwner">@username</span>
+        </div>
+    </div>
+
+    <div id="dvContenedorVotacion"></div>
+
+    <small class="d-block text-end mt-3">
+        <a href="#">All suggestions</a>
+    </small>
+</div>
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h6 class="border-bottom pb-2 mb-0">
+    <h6 class="border-bottom pb-2 mb-0 labelRecientes">
         Recent topics
     </h6>
 
@@ -21,26 +37,6 @@
     
     <small class="d-block text-end mt-3">
         <a href="javascript:void(0);">All updates</a>
-    </small>
-</div>
-
-<div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h6 class="border-bottom pb-2 mb-0">Suggestions</h6>
-    <div class="text-muted pt-3 d-none votacionClone">
-        <img src="#" width="32" height="32" class="rounded-circle me-2 votacionImg">
-        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-            <div class="d-flex justify-content-between">
-                <strong class="text-gray-dark votacionName">Full Name</strong>
-                <a href="#" class="votacionLink">View</a>
-            </div>
-            <span class="d-block votacionOwner">@username</span>
-        </div>
-    </div>
-
-    <div id="dvContenedorVotacion"></div>
-
-    <small class="d-block text-end mt-3">
-        <a href="#">All suggestions</a>
     </small>
 </div>
 
@@ -76,6 +72,15 @@
 
             // Listar sugerencias
             listTop();
+        });
+    }
+
+    // Metodo para traducir la pagina
+    function switchPage() {
+        $.post(`${base_url}/assets/lang.json`, {}, function(languages) {
+            let lblindex = languages[lang]["index"];
+            $(`.labelSugerencia`).html(lblindex.labelSugerencia);
+            $(`.labelRecientes`).html(lblindex.labelRecientes);
         });
     }
 </script>

@@ -30,14 +30,19 @@
 <div class="flex-row mb-3 d-none blockClone">
     <div class="p-2"><img src="#" width="32" height="32" class="rounded-circle me-2 userImg"></div>
     <div class="p-2">
-        <figure class="">
+        <figure class="mb-1">
             <blockquote class="blockquote">
                 <p class="fs-6 autor">Name.</p>
             </blockquote>
-            <figcaption class="blockquote-footer comentario">
+            <figcaption class="blockquote-footer comentario mb-1">
                 Coment
             </figcaption>
         </figure>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a class="text-decoration-none d-none linkResponder" href="javascript:void(0);">Responder</a></li>
+            <li class="list-inline-item"><a class="text-decoration-none d-none linkEditar" href="javascript:void(0);">Editar</a></li>
+            <li class="list-inline-item"><a class="text-decoration-none d-none linkBorrar" href="javascript:void(0);">Borrar</a></li>
+        </ul>
     </div>
 </div>
 
@@ -100,8 +105,13 @@
         };
 
         $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
-            let data = result.data;
             $("#conetndorComentarios").html("");
+
+            let data = result.data,
+                esValido = true;
+
+            if(isLoged == 0 || userData.image == "nothing")
+                esValido = false;
 
             $.each( data, function(index, item){
                 let objComent = $(".blockClone").clone();
@@ -109,6 +119,12 @@
                 objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
                 objComent.find(".comentario").html(item.comentario);
                 objComent.find(".userImg").attr("src", item.userFoto);
+
+                if(esValido)
+                    objComent.find(".linkResponder").removeClass("d-none");
+
+                if(item.user_id == userData.id)
+                    objComent.find(".linkEditar, .linkBorrar").removeClass("d-none");
 
                 objComent.removeClass("d-none blockClone");
                 objComent.addClass("d-flex");
@@ -162,6 +178,7 @@
                     .removeAttr("disabled");
 
                 $("#btnSendComment").removeAttr("disabled");
+                listComents();
             }
         }
     }

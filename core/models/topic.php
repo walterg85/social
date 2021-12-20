@@ -202,17 +202,17 @@
             $subWhere = '';
 
             if($groupId > 0)
-                $subWhere = ' WHERE g.id = '. $groupId . ' ';
+                $subWhere = ' WHERE post_id in (select id from post where grupo_id = '. $groupId . ') ';
 
             $cmd = '
                 SELECT 
                     universo.votacion, p.titulo, g.nombre, universo.post_id, CONCAT(u.name, " ", u.last_name) as owner, u.id
                 FROM 
-                    (SELECT COUNT(id) AS votacion, post_id FROM postlike GROUP by post_id ORDER BY 1 DESC LIMIT 0,10) universo
+                    (SELECT COUNT(id) AS votacion, post_id FROM postlike '.$subWhere.' GROUP by post_id ORDER BY 1 DESC LIMIT 0,10) universo
                 INNER JOIN post p ON p.id = universo.post_id
                 INNER JOIN grupo g ON g.id = p.grupo_id
                 INNER JOIN user u ON u.id = p.user_id
-            ' . $subWhere;
+            ';
 
             $sql = $pdo->prepare($cmd);
             $sql->execute();

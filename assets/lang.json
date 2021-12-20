@@ -1,0 +1,22 @@
+{
+	"en":{
+		"menu_principal":{
+			"labelDashboard": "Dashboard",
+			"labelProfile": "Profile",
+			"labelLogout": "Log out",
+			"labelLogin": "Login",
+			"labelSearch": "Type to Search...",
+			"labelTranslate": "<i class='bi bi-shuffle'></i> Español"
+		}
+	},
+	"es":{
+		"menu_principal":{
+			"labelDashboard": "Tablero",
+			"labelProfile": "Perfil",
+			"labelLogout": "Cerrar sesión",
+			"labelLogin": "Iniciar sesión",
+			"labelSearch": "Escribe para buscar",
+			"labelTranslate": "<i class='bi bi-shuffle'></i> English"
+		}
+	}
+}

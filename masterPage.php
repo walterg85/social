@@ -216,9 +216,20 @@
                     <li class="nav-item">
                         <a class="nav-link" href="javascript:void(0);" id="linkProfile">Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Switch account</a>
-                    </li>
+                    <?php
+                        if($loged == TRUE){
+                            echo '
+                                <li class="nav-item">
+                                    <a class="nav-link" href="logout.php">Log out</a>
+                                </li>
+                            ';
+                        } else {
+                            echo '<li class="nav-item">
+                                    <a class="nav-link" href="login.html">Login to account</a>
+                                </li>';
+                        }
+                    ?>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown01">
@@ -583,6 +594,32 @@
                 cache: false,
                 contentType: false,
                 processData: false
+            });
+        }
+
+        // Metodo para listar los temas mas votados
+        function listTop(groupId = 0) {
+            $(`#dvContenedorVotacion`).html("");
+
+            let _Data = {
+                "_method": "_GetVotacion",
+                "groupId": groupId
+            };
+
+            $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+                $.each( result.data, function(index, item){
+                    let objVotacion = $(".votacionClone").clone();
+
+                    objVotacion.find(".votacionImg").attr("src", `assets/img/user/${item.id}.jpg`);
+                    objVotacion.find(".votacionName").html(`${item.nombre} | ${item.titulo}`);
+                    objVotacion.find(".votacionLink").attr("href", `topic.php?id=${item.post_id}`);
+                    objVotacion.find(".votacionOwner").html(`${item.owner}`);
+
+                    objVotacion.removeClass("d-none votacionClone");
+                    objVotacion.addClass("d-flex");
+
+                    $(objVotacion).appendTo(`#dvContenedorVotacion`);
+                });                
             });
         }
     </script>

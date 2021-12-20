@@ -149,6 +149,7 @@
     function preventTopic(){
         if(isLoged == 0){
             $("#ctrlComments").addClass("d-none");
+            $("#btnILike").addClass("d-none");
         } else{
             if(userData.image == "nothing"){
                 $("#txtComentario")

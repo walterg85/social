@@ -67,7 +67,6 @@
 
     <div class="d-flex text-muted pt-3 d-none topicClone">
         <img src="#" width="32" height="32" class="rounded-circle me-2 userImg">
-
         <p class="pb-3 mb-0 small lh-sm border-bottom">
             <strong class="d-block text-gray-dark lblAutor">@username</strong>
             <a class="lblTitulo text-decoration-none" href="#" id="linkGroup">New group</a>

@@ -29,7 +29,7 @@
 
 <div class="flex-row mb-3 d-none blockClone">
     <div class="p-2"><img src="#" width="32" height="32" class="rounded-circle me-2 userImg"></div>
-    <div class="p-2">
+    <div class="p-2 w-100">
         <figure class="mb-1">
             <blockquote class="blockquote">
                 <p class="fs-6 autor">Name.</p>
@@ -39,9 +39,23 @@
             </figcaption>
         </figure>
         <ul class="list-inline">
-            <li class="list-inline-item"><a class="text-decoration-none d-none linkResponder" href="javascript:void(0);">Responder</a></li>
+            <li class="list-inline-item">
+                <a class="text-decoration-none d-none linkResponder" data-bs-toggle="collapse" data-bs-target="#dvResponder" aria-expanded="false" href="javascript:void(0);">Responder</a>
+            </li>
             <li class="list-inline-item"><a class="text-decoration-none d-none linkEditar" href="javascript:void(0);">Editar</a></li>
             <li class="list-inline-item"><a class="text-decoration-none d-none linkBorrar" href="javascript:void(0);">Borrar</a></li>
+
+            <div class="collapse mt-2" id="dvResponder">
+                <div class="card card-body">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control txtResponder" placeholder="Write an answer here" style="height: 60px"></textarea>
+                        <label class="">Write an answer here</label>
+                    </div>
+                     <div class="d-md-flex justify-content-md-end">
+                        <button class="btn btn-outline-success btn-block pull-right btnSendAnswer" data-commentid="0">Send answer</button>
+                    </div>
+                </div>
+            </div>
         </ul>
     </div>
 </div>
@@ -120,8 +134,14 @@
                 objComent.find(".comentario").html(item.comentario);
                 objComent.find(".userImg").attr("src", item.userFoto);
 
-                if(esValido)
-                    objComent.find(".linkResponder").removeClass("d-none");
+                if(esValido){
+                    objComent.find(".collapse").attr("id", `dvResponder${item.id}`);
+                    objComent.find(".linkResponder")
+                        .removeClass("d-none")
+                        .attr("data-bs-target", `#dvResponder${item.id}`);
+                    objComent.find(".btnSendAnswer").attr("data-commentid", item.id);
+                    objComent.find(".txtResponder").attr("id", `txtResponder${item.id}`);
+                }
 
                 if(item.user_id == userData.id)
                     objComent.find(".linkEditar, .linkBorrar").removeClass("d-none");
@@ -130,6 +150,24 @@
                 objComent.addClass("d-flex");
 
                 $(objComent).appendTo("#conetndorComentarios");
+            });
+
+            $(".btnSendAnswer").unbind().click( function(){
+                let commentId = $(this).data("commentid"),
+                    txtrespuesta = $(`#txtResponder${commentId}`).val();
+
+                if(txtrespuesta.length > 0){
+                    let _Data = {
+                        "_method": "_Respondercomentarios",
+                        "commentId": commentId,
+                        "respuesta": txtrespuesta,
+                        "topicId": topicId
+                    };
+
+                    $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+                        listComents();
+                    });
+                }
             });
         });
     }

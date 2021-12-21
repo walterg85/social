@@ -9,6 +9,7 @@
 	if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$put_vars 	= ($_POST) ? $_POST : json_decode(file_get_contents("php://input"), TRUE);
 		$topicModel	= new Topicmodel();
+		$respuestas = [];
 
 		if($put_vars['_method'] == 'POST'){
 			$put_vars['userId'] = $_SESSION['authData']->id;
@@ -93,7 +94,7 @@
 			$tmpData = $topicModel->getComments( $put_vars['topicId'] );
 			$data = array();
 			foreach ($tmpData as $key => $value) {
-				$value['respuestas'] = $topicModel->getComments( $put_vars['topicId'], $value['id'] );
+				$value['respuestas'] = $topicModel->getComments($put_vars['topicId'], $value['id']);
 				$data[] = $value;
 			}
 
@@ -159,7 +160,28 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_DeleteComment'){
+
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->deleteComment( $put_vars['commentId'] )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
 		}
+	}
+
+	function rcvResponses($topicId, $parent){
+		$tmpResponse = $topicModel->getComments( $topicId, $parent );
+
+		foreach ($tmpResponse as $key => $value) {
+			$value['respuestas'] = rcvResponses($topicId, $value['id']);
+			$tmpResponse[$key] = $value;
+		}
+
+		return TRUE;
 	}
 
 	header('HTTP/1.1 400 Bad Request');

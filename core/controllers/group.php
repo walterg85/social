@@ -25,6 +25,9 @@
 					move_uploaded_file($tempname, "../../{$folder}/{$filename}");
 				}
 
+				if($groupModel->joinGroup($tmpResponse, $_SESSION['socialAuthData']->id, 1) > 0)
+					$_SESSION['socialAuthData']->groupsid = $groupModel->getJoinGroups( $_SESSION['socialAuthData']->id )['groupsid'];
+
 				$response = array(
 					'codeResponse' 	=> 200
 				);

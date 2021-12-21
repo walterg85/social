@@ -72,18 +72,19 @@
         }
 
         // Metodo para registrar un usuario a un grupo
-        public function joinGroup($groupId, $userId){
+        public function joinGroup($groupId, $userId, $tipo = 2){
             $pdo = new Conexion();
             $cmd = '
                 INSERT INTO usergroup
                     (group_id, user_id, tipo, register_date, estatus)
                 VALUES
-                    (:group_id, :user_id, 2, now(), 1);
+                    (:group_id, :user_id, :tipo, now(), 1);
             ';
 
             $parametros = array(
                 ':group_id' => $groupId,
-                ':user_id'  => $userId
+                ':user_id'  => $userId,
+                ':tipo'     => $tipo
             );
             
             try {
@@ -125,7 +126,7 @@
                 FROM 
                     usergroup ug 
                 INNER JOIN user u ON u.id = ug.user_id
-                WHERE ug.group_id =:groupId
+                WHERE ug.group_id =:groupId AND ug.tipo = 2
                 ORDER BY ug.id DESC 
                 LIMIT 0, 10
             ';

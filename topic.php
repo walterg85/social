@@ -185,10 +185,16 @@
             });
 
             $(".linkEditar").unbind().click( function(){
+                jQuery('.collapse').collapse('hide');
+
                 let comentario = $(this).parent().parent().parent().find(".comentario").html(),
                     comentarioId = $(this).data("commentid");
 
                 $(`#txtEditar${comentarioId}`).val(comentario);
+            });
+
+            $(".linkResponder").unbind().click( function(){
+                jQuery('.collapse').collapse('hide');
             });
 
             $(".btnEditAnswer").unbind().click( function(){

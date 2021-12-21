@@ -382,16 +382,19 @@
             $("#btnJoinGroup").click( fnJoinGroup);
 
             if(userData && userData.groupsid.length > 0){
-                let ids = Array.from(userData.groupsid);
-                if( ids.includes(groupId) ){
+                let ids = (userData.groupsid).split(",");
+                if( typeof groupId !== 'undefined' && ids.includes(groupId) ){
                     $("#btnJoinGroup")
                         .unbind()
                         .html("You are a member of this group");
 
                     $("#newTopic").removeClass("d-none");
                 }
+
+                if(typeof groupId == 'undefined')
+                    $("#btnJoinGroup").addClass("d-none");
             }
-            
+
             if(isLoged == 0){
                 $("#btnJoinGroup")
                     .unbind()

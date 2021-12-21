@@ -92,7 +92,7 @@
         urlParams   = new URLSearchParams(queryString),
         topicId     = urlParams.get('id'),
         labelLike   = "",
-        currentGroupId = 0;
+        ownerGroup  = 0;
 
     (function () {
         'use strict'
@@ -221,7 +221,12 @@
     function rcvComentario(item, esValido, margen = 0){
         let objComent = $(".blockClone").clone();
 
-        objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
+        if(userData && ownerGroup == userData.id && item.esMiembro == 1){
+            objComent.find(".autor").html(`<a href="javascript:void(0)" class="text-decoration-none" data-userid="${item.userId}" data-groupid="${item.group_id}">${item.username} | <small>${item.fecha_registro}</small></a>`);
+        }else{
+            objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
+        }
+
         objComent.find(".comentario").html(item.comentario);
         objComent.find(".userImg").attr("src", item.userFoto);
 
@@ -234,7 +239,7 @@
             objComent.find(".txtResponder").attr("id", `txtResponder${item.id}`);
         }
 
-        if(item.user_id == userData.id){
+        if(userData && item.user_id == userData.id){
             objComent.find(".linkEditar, .linkBorrar")
                 .attr("data-commentid", item.id)
                 .removeClass("d-none");
@@ -284,7 +289,7 @@
             }
 
             $("#topicContent").html(topic.contenido);
-            currentGroupId = topic.grupo_id;
+            ownerGroup = topic.ownerGroup;
 
             listComents();
         });

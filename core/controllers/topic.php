@@ -12,7 +12,7 @@
 		$respuestas = [];
 
 		if($put_vars['_method'] == 'POST'){
-			$put_vars['userId'] = $_SESSION['authData']->id;
+			$put_vars['userId'] = $_SESSION['socialAuthData']->id;
 
 			$tmpResponse = $topicModel->createTopic($put_vars);
 
@@ -78,7 +78,7 @@
 			$data = array(
 				'comentario'	=> $put_vars['comentario'],
 				'topicId' 		=> $put_vars['topicId'],
-				'userId'		=> $_SESSION['authData']->id
+				'userId'		=> $_SESSION['socialAuthData']->id
 			);
 			
 			$topicModel->setComments( $data );
@@ -92,15 +92,15 @@
 			exit(json_encode($response));
 		} else if($put_vars['_method'] == '_GetComments'){
 			$tmpData = $topicModel->getComments( $put_vars['topicId'] );
-			$data = array();
-			foreach ($tmpData as $key => $value) {
-				$value['respuestas'] = $topicModel->getComments($put_vars['topicId'], $value['id']);
-				$data[] = $value;
-			}
+			// $data = array();
+			// foreach ($tmpData as $key => $value) {
+			// 	$value['respuestas'] = $topicModel->getComments($put_vars['topicId'], $value['id']);
+			// 	$data[] = $value;
+			// }
 
 			$response = array(
 				'codeResponse' 	=> 200,
-				'data' 			=> $data
+				'data' 			=> $tmpData
 			);
 
 			header('HTTP/1.1 200 Ok');
@@ -109,7 +109,7 @@
 		} else if($put_vars['_method'] == '_SetLikes'){
 			$data = array(
 				'topicId'	=> $put_vars['topicId'],
-				'userId'	=> $_SESSION['authData']->id
+				'userId'	=> $_SESSION['socialAuthData']->id
 			);
 
 			$response = array(
@@ -123,7 +123,7 @@
 		} else if($put_vars['_method'] == '_GetLikes'){
 			$data = array(
 				'topicId'	=> $put_vars['topicId'],
-				'userId'	=> $_SESSION['authData']->id
+				'userId'	=> $_SESSION['socialAuthData']->id
 			);
 
 			$response = array(
@@ -148,7 +148,7 @@
 				'comentario'	=> $put_vars['respuesta'],
 				'topicId' 		=> $put_vars['topicId'],
 				'commentId' 	=> $put_vars['commentId'],
-				'userId'		=> $_SESSION['authData']->id
+				'userId'		=> $_SESSION['socialAuthData']->id
 			);
 			
 			$topicModel->setResponesComments( $data );
@@ -165,6 +165,21 @@
 			$response = array(
 				'codeResponse' 	=> 200,
 				'data' 			=> $topicModel->deleteComment( $put_vars['commentId'] )
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_EditarComentario'){
+			$data = array(
+				'comentario'	=> $put_vars['respuesta'],
+				'commentId' 	=> $put_vars['commentId']
+			);
+			
+			$topicModel->editComments( $data );
+
+			$response = array(
+				'codeResponse' 	=> 200
 			);
 
 			header('HTTP/1.1 200 Ok');

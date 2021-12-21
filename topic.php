@@ -43,13 +43,13 @@
                 <a class="text-decoration-none d-none linkResponder" data-bs-toggle="collapse" data-bs-target="#dvResponder" aria-expanded="false" href="javascript:void(0);">Responder</a>
             </li>
             <li class="list-inline-item">
-                <a class="text-decoration-none d-none linkEditar" data-commentid="0" href="javascript:void(0);">Editar</a>
+                <a class="text-decoration-none d-none linkEditar" data-bs-toggle="collapse" data-bs-target="#dvEditar" data-commentid="0" href="javascript:void(0);">Editar</a>
             </li>
             <li class="list-inline-item">
                 <a class="text-decoration-none d-none linkBorrar" data-commentid="0" href="javascript:void(0);">Borrar</a>
             </li>
 
-            <div class="collapse mt-2" id="dvResponder">
+            <div class="collapse mt-2 dvResponder" id="dvResponder">
                 <div class="card card-body">
                     <div class="form-floating mb-3">
                         <textarea class="form-control txtResponder" placeholder="Write an answer here" style="height: 60px"></textarea>
@@ -57,6 +57,18 @@
                     </div>
                      <div class="d-md-flex justify-content-md-end">
                         <button class="btn btn-outline-success btn-block pull-right btnSendAnswer" data-commentid="0">Send answer</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse mt-2 dvEditar" id="dvEditar">
+                <div class="card card-body">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control txtEditar" placeholder="Edit your answer here" style="height: 60px"></textarea>
+                        <label class="">Edit your answer here</label>
+                    </div>
+                     <div class="d-md-flex justify-content-md-end">
+                        <button class="btn btn-outline-success btn-block pull-right btnEditAnswer" data-commentid="0">Edit answer</button>
                     </div>
                 </div>
             </div>
@@ -171,6 +183,30 @@
                     }
                 })()
             });
+
+            $(".linkEditar").unbind().click( function(){
+                let comentario = $(this).parent().parent().parent().find(".comentario").html(),
+                    comentarioId = $(this).data("commentid");
+
+                $(`#txtEditar${comentarioId}`).val(comentario);
+            });
+
+            $(".btnEditAnswer").unbind().click( function(){
+                let commentId = $(this).data("commentid"),
+                    txtEditar = $(`#txtEditar${commentId}`).val();
+
+                if(txtEditar.length > 0){
+                    let _Data = {
+                        "_method": "_EditarComentario",
+                        "commentId": commentId,
+                        "respuesta": txtEditar
+                    };
+
+                    $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+                        listComents();
+                    });
+                }
+            });
         });
     }
 
@@ -183,7 +219,7 @@
         objComent.find(".userImg").attr("src", item.userFoto);
 
         if(esValido){
-            objComent.find(".collapse").attr("id", `dvResponder${item.id}`);
+            objComent.find(".dvResponder").attr("id", `dvResponder${item.id}`);
             objComent.find(".linkResponder")
                 .removeClass("d-none")
                 .attr("data-bs-target", `#dvResponder${item.id}`);
@@ -191,10 +227,17 @@
             objComent.find(".txtResponder").attr("id", `txtResponder${item.id}`);
         }
 
-        if(item.user_id == userData.id)
+        if(item.user_id == userData.id){
             objComent.find(".linkEditar, .linkBorrar")
                 .attr("data-commentid", item.id)
                 .removeClass("d-none");
+
+            objComent.find(".dvEditar").attr("id", `dvEditar${item.id}`);
+            objComent.find(".linkEditar").attr("data-bs-target", `#dvEditar${item.id}`);
+
+            objComent.find(".btnEditAnswer").attr("data-commentid", item.id);
+            objComent.find(".txtEditar").attr("id", `txtEditar${item.id}`);
+        }
 
         objComent.removeClass("d-none blockClone");
         objComent.addClass("d-flex");
@@ -204,11 +247,11 @@
 
         $(objComent).appendTo("#conetndorComentarios");
 
-        if(item.respuestas && item.respuestas.length > 0)
-            $.each( item.respuestas, function(i, j){
-                if( rcvComentario(j, esValido, 6) )
-                    return;
-            });
+        // if(item.respuestas && item.respuestas.length > 0)
+        //     $.each( item.respuestas, function(i, j){
+        //         if( rcvComentario(j, esValido, 6) )
+        //             return;
+        //     });
 
         return true;
     }

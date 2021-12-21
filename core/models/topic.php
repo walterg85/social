@@ -130,27 +130,56 @@
         }
 
         // Mostrar todos los comentarios de un post
-        public function getComments($topicId){
+        public function getComments($topicId, $parent = 0){
             $pdo = new Conexion();
 
             $cmd = '
                 SELECT
                     c.id, c.user_id, c.post_id, c.fecha_registro, c.comentario, c.estatus,
                     concat(u.name, " ", u.last_name) AS username,
-                    concat("assets/img/user/", u.id, ".jpg") AS userFoto
+                    concat("assets/img/user/", u.id, ".jpg") AS userFoto,
+                    c.parent
                 FROM comentario c 
                 INNER JOIN user u ON u.id = c.user_id
-                WHERE c.post_id =:topicId
+                WHERE c.post_id =:topicId AND c.estatus = 1 AND c.parent =:parent
             ';
 
             $parametros = array(
-                'topicId' => $topicId
+                ':topicId'  => $topicId,
+                ':parent'   => $parent
             );
 
             $sql = $pdo->prepare($cmd);
             $sql->execute($parametros);
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Registrar una respuesta a un comentario de un tema
+        public function setResponesComments($data){
+            $pdo = new Conexion();
+            $cmd = '
+                INSERT INTO comentario
+                    (user_id, post_id, fecha_registro, comentario, parent, estatus)
+                VALUES
+                    (:user_id, :post_id, now(), :comentario, :commentId, 1);
+            ';
+
+            $parametros = array(
+                ':user_id'      => $data['userId'],
+                ':post_id'      => $data['topicId'],
+                ':comentario'   => $data['comentario'],
+                ':commentId'    => $data['commentId']
+            );
+            
+            try {
+                $sql = $pdo->prepare($cmd);
+                $sql->execute($parametros);
+
+                return TRUE;
+            } catch (PDOException $e) {
+                return FALSE;
+            }
         }
 
         // Metodo para setear un like al post

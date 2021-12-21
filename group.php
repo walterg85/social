@@ -80,6 +80,22 @@
     </small>
 </div>
 
+<div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0">
+        <texto class="labelLastUsers">Last registered users</texto>
+    </h6>
+
+    <div class="d-flex text-muted pt-3 d-none lastClone">
+        <img src="#" width="32" height="32" class="rounded-circle me-2 userImg">
+        <p class="pb-3 mb-0 small lh-sm border-bottom">
+            <span class="d-block text-gray-dark lblUsername">@username</span>
+            <!-- <a class="lblFecha text-decoration-none" href="javascript:void(0);"></a> -->
+        </p>
+    </div>
+
+    <div id="dvContenedorLastuser"></div>
+</div>
+
 <script type="text/javascript">
     let queryString = window.location.search,
         urlParams   = new URLSearchParams(queryString),
@@ -117,6 +133,8 @@
                 }
             }
         });
+
+        getTopUser();
     })()
 
     // Metodo para actualizar perfil de usuario
@@ -241,6 +259,28 @@
             let lblindex = languages[lang]["index"];
             $(`.labelSugerencia`).html(lblindex.labelSugerencia);
             $(`.labelRecientes`).html(lblindex.labelRecientes);
+        });
+    }
+
+    // Listar los ultimos usuarios registrados en el grupo
+    function getTopUser(){
+
+        let _Data = {
+            "_method": "getTopUser",
+            "groupId": groupId
+        };
+
+        $.post(`${base_url}/core/controllers/group.php`, _Data, function(result){
+            $.each( result.data, function(index, item){
+                let lastItem = $(".lastClone").clone();
+
+                lastItem.find(".lblUsername").html(`${item.username} On ${item.register_date}`);
+                // lastItem.find(".lblFecha").html(item.register_date)
+                lastItem.find(".userImg").attr("src", `${base_url}/${item.userFoto}`);
+
+                lastItem.removeClass("d-none lastClone");
+                $(lastItem).appendTo(`#dvContenedorLastuser`);
+            });
         });
     }
 </script>

@@ -49,7 +49,7 @@
 
     <script type="text/javascript">
         var base_url    = "<?php echo $base_url; ?>",
-            userData    = <?php echo ($loged) ? json_encode($_SESSION['socialAuthData']) : "{}"; ?>,
+            userData    = <?php echo ($loged) ? json_encode($_SESSION['socialAuthData']) : "null"; ?>,
             isLoged     = <?php echo ($loged) ? 1 : 0; ?>,
             lang        = (window.navigator.language).substring(0,2);
     </script>
@@ -381,12 +381,21 @@
             // Accion para unirse a un grupo
             $("#btnJoinGroup").click( fnJoinGroup);
 
-            if(userData.groupsid.length > 0){
+            if(userData && userData.groupsid.length > 0){
                 let ids = Array.from(userData.groupsid);
                 if( ids.includes(groupId) ){
-                    $("#btnJoinGroup").addClass("d-none");
+                    $("#btnJoinGroup")
+                        .unbind()
+                        .html("You are a member of this group");
+
                     $("#newTopic").removeClass("d-none");
                 }
+            }
+            
+            if(isLoged == 0){
+                $("#btnJoinGroup")
+                    .unbind()
+                    .html("You must login to join this group");
             }
         })()
 

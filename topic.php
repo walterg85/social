@@ -91,7 +91,8 @@
     let queryString = window.location.search,
         urlParams   = new URLSearchParams(queryString),
         topicId     = urlParams.get('id'),
-        labelLike   = "";
+        labelLike   = "",
+        currentGroupId = 0;
 
     (function () {
         'use strict'
@@ -283,6 +284,7 @@
             }
 
             $("#topicContent").html(topic.contenido);
+            currentGroupId = topic.grupo_id;
 
             listComents();
         });

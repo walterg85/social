@@ -393,7 +393,8 @@
                     };
 
                     $.post(`${base_url}/core/controllers/group.php`, objData, function(result) {
-                        $("#btnJoinGroup").addClass("d-none");
+                        // $("#btnJoinGroup").addClass("d-none");
+                        window.location.reload();
                     });
                 }
             })()

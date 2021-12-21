@@ -64,6 +64,7 @@
 			exit(json_encode($response));
 		} else if($put_vars['_method'] == '_JoinGroup'){
 			$groupModel->joinGroup($put_vars['groupId'], $_SESSION['socialAuthData']->id);
+			$_SESSION['socialAuthData']->groupsid = $groupModel->getJoinGroups( $_SESSION['socialAuthData']->id );
 
 			$response = array(
 				'codeResponse' => 200

@@ -95,4 +95,22 @@
                 return 0;
             }
         }
+
+        // Metodo para buscar todos los grupos a los que pertenece el usuario
+        public function getJoinGroups($userId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT group_concat(group_id) FROM usergroup where user_id =:userId
+            ';
+
+            $parametros = array(
+                ':user_id'  => $userId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
     }

@@ -101,7 +101,7 @@
             $pdo = new Conexion();
 
             $cmd = '
-                SELECT group_concat(group_id) FROM usergroup where user_id =:userId
+                SELECT group_concat(group_id) AS groupsid FROM usergroup where user_id =:user_id
             ';
 
             $parametros = array(
@@ -112,5 +112,31 @@
             $sql->execute($parametros);
 
             return $sql->fetch(PDO::FETCH_ASSOC);
+        }
+
+        // Metodo para mostrar los ultimos 10 usuarios registrados en un grupo
+        public function getTopUser($groupId){
+            $pdo = new Conexion();
+            $cmd = '
+                SELECT 
+                    CONCAT(u.name, " ", u.last_name) AS username,
+                    CONCAT("assets/img/user/", u.id, ".jpg") AS userFoto,
+                    ug.register_date
+                FROM 
+                    usergroup ug 
+                INNER JOIN user u ON u.id = ug.user_id
+                WHERE ug.group_id =:groupId
+                ORDER BY ug.id DESC 
+                LIMIT 0, 10
+            ';
+
+            $parametros = array(
+                ':groupId' => $groupId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
     }

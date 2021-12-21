@@ -137,8 +137,7 @@
                 SELECT
                     c.id, c.user_id, c.post_id, c.fecha_registro, c.comentario, c.estatus,
                     concat(u.name, " ", u.last_name) AS username,
-                    concat("assets/img/user/", u.id, ".jpg") AS userFoto,
-                    c.parent
+                    concat("assets/img/user/", u.id, ".jpg") AS userFoto
                 FROM comentario c 
                 INNER JOIN user u ON u.id = c.user_id
                 WHERE c.post_id =:topicId AND c.estatus = 1 AND c.parent =:parent
@@ -247,5 +246,23 @@
             $sql->execute();
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Eliminar un commentario
+        public function deleteComment($commentId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                DELETE FROM comentario WHERE id =:id
+            ';
+
+            $parametros = array(
+                ':id'  => $commentId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return TRUE;
         }
     }

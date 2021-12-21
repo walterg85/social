@@ -459,6 +459,38 @@
             });
         }
 
+        // Metodo para mostrar una alerta de confirmacion
+        // title: Cuestion proincipal
+        // text: Texto explicativo
+        // confirmButtonText: texto que se colocara en el boton de confirmacion
+        /*
+        [USAGE]
+        (async () => {
+            const alert = await showConfirmation("¿Deseas eliminar?", "Esto no se podra revertir!", "Si eliminar");
+            console.log(alert);
+        })()
+
+        [RESULT]
+        {
+            "isConfirmed": false,
+            "isDenied": false,
+            "isDismissed": true,
+            "dismiss": "cancel"
+        }
+        */
+        function showConfirmation(title, text, confirmButtonText){
+            return Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: confirmButtonText,
+                allowOutsideClick: false
+            });
+        }
+
         // Iniciar componenetes para edicion de imagen
         function initComponent(objPreview, ctrlInput, maxCroppedWidth, maxCroppedHeight) {
             // Controlar tipo de objeto que intentan subir

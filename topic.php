@@ -42,8 +42,12 @@
             <li class="list-inline-item">
                 <a class="text-decoration-none d-none linkResponder" data-bs-toggle="collapse" data-bs-target="#dvResponder" aria-expanded="false" href="javascript:void(0);">Responder</a>
             </li>
-            <li class="list-inline-item"><a class="text-decoration-none d-none linkEditar" href="javascript:void(0);">Editar</a></li>
-            <li class="list-inline-item"><a class="text-decoration-none d-none linkBorrar" href="javascript:void(0);">Borrar</a></li>
+            <li class="list-inline-item">
+                <a class="text-decoration-none d-none linkEditar" data-commentid="0" href="javascript:void(0);">Editar</a>
+            </li>
+            <li class="list-inline-item">
+                <a class="text-decoration-none d-none linkBorrar" data-commentid="0" href="javascript:void(0);">Borrar</a>
+            </li>
 
             <div class="collapse mt-2" id="dvResponder">
                 <div class="card card-body">
@@ -128,28 +132,8 @@
                 esValido = false;
 
             $.each( data, function(index, item){
-                let objComent = $(".blockClone").clone();
-
-                objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
-                objComent.find(".comentario").html(item.comentario);
-                objComent.find(".userImg").attr("src", item.userFoto);
-
-                if(esValido){
-                    objComent.find(".collapse").attr("id", `dvResponder${item.id}`);
-                    objComent.find(".linkResponder")
-                        .removeClass("d-none")
-                        .attr("data-bs-target", `#dvResponder${item.id}`);
-                    objComent.find(".btnSendAnswer").attr("data-commentid", item.id);
-                    objComent.find(".txtResponder").attr("id", `txtResponder${item.id}`);
-                }
-
-                if(item.user_id == userData.id)
-                    objComent.find(".linkEditar, .linkBorrar").removeClass("d-none");
-
-                objComent.removeClass("d-none blockClone");
-                objComent.addClass("d-flex");
-
-                $(objComent).appendTo("#conetndorComentarios");
+                if( rcvComentario(item, esValido) )
+                    return;
             });
 
             $(".btnSendAnswer").unbind().click( function(){
@@ -169,7 +153,64 @@
                     });
                 }
             });
+
+            $(".linkBorrar").unbind().click( function(){
+                let commentId = $(this).data("commentid");
+
+                (async () => {
+                    const tmpResult = await showConfirmation(`Delete?`, 'wish to delete this comment?', "Delete");
+                    if(tmpResult.isConfirmed){
+                        let objData = {
+                            "_method":"_DeleteComment",
+                            "commentId": commentId
+                        };
+
+                        $.post(`${base_url}/core/controllers/topic.php`, objData, function(result) {
+                            listComents();
+                        });
+                    }
+                })()
+            });
         });
+    }
+
+    // Metodo recursivo para pintar los comentarios
+    function rcvComentario(item, esValido, margen = 0){
+        let objComent = $(".blockClone").clone();
+
+        objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
+        objComent.find(".comentario").html(item.comentario);
+        objComent.find(".userImg").attr("src", item.userFoto);
+
+        if(esValido){
+            objComent.find(".collapse").attr("id", `dvResponder${item.id}`);
+            objComent.find(".linkResponder")
+                .removeClass("d-none")
+                .attr("data-bs-target", `#dvResponder${item.id}`);
+            objComent.find(".btnSendAnswer").attr("data-commentid", item.id);
+            objComent.find(".txtResponder").attr("id", `txtResponder${item.id}`);
+        }
+
+        if(item.user_id == userData.id)
+            objComent.find(".linkEditar, .linkBorrar")
+                .attr("data-commentid", item.id)
+                .removeClass("d-none");
+
+        objComent.removeClass("d-none blockClone");
+        objComent.addClass("d-flex");
+
+        if(margen > 0)
+            objComent.css("margin-left", `${margen}rem`);
+
+        $(objComent).appendTo("#conetndorComentarios");
+
+        if(item.respuestas && item.respuestas.length > 0)
+            $.each( item.respuestas, function(i, j){
+                if( rcvComentario(j, esValido, 6) )
+                    return;
+            });
+
+        return true;
     }
 
     // Buscar el detalle del tema seleccionado

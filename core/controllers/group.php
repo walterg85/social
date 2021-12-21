@@ -73,6 +73,15 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
+		} else if($put_vars['_method'] == 'getTopUser'){
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $groupModel->getTopUser($put_vars['groupId'])
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
 		}
 	}
 

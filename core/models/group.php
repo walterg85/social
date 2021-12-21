@@ -135,7 +135,7 @@
             );
 
             $sql = $pdo->prepare($cmd);
-            $sql->execute();
+            $sql->execute($parametros);
 
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }

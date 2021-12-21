@@ -87,7 +87,8 @@
                     p.titulo, 
                     p.contenido,
                     p.fecha_registro,
-                    concat(u.name, " ", u.last_name) AS owner
+                    concat(u.name, " ", u.last_name) AS owner,
+                    p.grupo_id
                 FROM post p 
                 INNER JOIN user u ON u.id = p.user_id 
                 WHERE p.id =:topicId
@@ -137,7 +138,8 @@
                 SELECT
                     c.id, c.user_id, c.post_id, c.fecha_registro, c.comentario, c.estatus,
                     concat(u.name, " ", u.last_name) AS username,
-                    concat("assets/img/user/", u.id, ".jpg") AS userFoto
+                    concat("assets/img/user/", u.id, ".jpg") AS userFoto,
+                    (SELECT COUNT(id) FROM usergroup WHERE group_id = (SELECT grupo_id FROM post WHERE id = c.post_id) AND user_id = c.user_id) AS esMiembro
                 FROM comentario c 
                 INNER JOIN user u ON u.id = c.user_id
                 WHERE c.post_id =:topicId AND c.estatus = 1 AND c.parent =:parent

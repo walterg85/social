@@ -34,7 +34,20 @@
         // Metodo auxiliar para obtener la iunformacion de inicio de session de un usuario
         public function validarUsuario($email) {
             $pdo = new Conexion();
-            $cmd = 'SELECT id, name, last_name, email, password, register_date FROM user WHERE email =:email AND active = 1';
+            $cmd = '
+                SELECT 
+                    u.id, 
+                    u.name, 
+                    u.last_name, 
+                    u.email, 
+                    u.password, 
+                    u.register_date,
+                    (SELECT group_concat(group_id) FROM usergroup where user_id = u.id) groupsid
+                FROM 
+                    user u
+                WHERE 
+                u.email =:email AND u.active = 1
+            ';
 
             $parametros = array(
                 ':email' => $email

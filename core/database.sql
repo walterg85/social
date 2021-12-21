@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 17-12-2021 a las 02:00:32
+-- Tiempo de generación: 21-12-2021 a las 21:29:32
 -- Versión del servidor: 8.0.17
 -- Versión de PHP: 7.3.10
 
@@ -38,7 +38,8 @@ CREATE TABLE `comentario` (
   `post_id` int(11) NOT NULL,
   `fecha_registro` datetime NOT NULL,
   `comentario` longtext NOT NULL,
-  `estatus` int(11) NOT NULL
+  `estatus` int(11) NOT NULL,
+  `parent` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -75,6 +76,20 @@ CREATE TABLE `post` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `postlike`
+--
+
+DROP TABLE IF EXISTS `postlike`;
+CREATE TABLE `postlike` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `date_registered` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `user`
 --
 
@@ -87,6 +102,22 @@ CREATE TABLE `user` (
   `password` varchar(250) DEFAULT NULL,
   `register_date` datetime DEFAULT NULL,
   `active` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usergroup`
+--
+
+DROP TABLE IF EXISTS `usergroup`;
+CREATE TABLE `usergroup` (
+  `id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `tipo` int(11) NOT NULL,
+  `register_date` datetime NOT NULL,
+  `estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -113,11 +144,23 @@ ALTER TABLE `post`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `postlike`
+--
+ALTER TABLE `postlike`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`) USING BTREE,
   ADD UNIQUE KEY `email` (`email`) USING BTREE;
+
+--
+-- Indices de la tabla `usergroup`
+--
+ALTER TABLE `usergroup`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -142,9 +185,21 @@ ALTER TABLE `post`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `postlike`
+--
+ALTER TABLE `postlike`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usergroup`
+--
+ALTER TABLE `usergroup`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

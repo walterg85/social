@@ -49,7 +49,7 @@
 
     <script type="text/javascript">
         var base_url    = "<?php echo $base_url; ?>",
-            userData    = <?php echo ($loged) ? json_encode($_SESSION['authData']) : "{}"; ?>,
+            userData    = <?php echo ($loged) ? json_encode($_SESSION['socialAuthData']) : "{}"; ?>,
             isLoged     = <?php echo ($loged) ? 1 : 0; ?>,
             lang        = (window.navigator.language).substring(0,2);
     </script>

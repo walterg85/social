@@ -265,4 +265,22 @@
 
             return TRUE;
         }
+
+        // Metodo para editar un comentario
+        public function editComments($data){
+            $pdo = new Conexion();
+            $cmd = '
+                UPDATE comentario SET comentario =:comentario WHERE id =:id
+            ';
+
+            $parametros = array(
+                ':comentario'   => $data['comentario'],
+                ':id'           => $data['commentId']
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            return TRUE;
+        }
     }

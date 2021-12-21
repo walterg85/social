@@ -60,8 +60,8 @@
 						$fotografia = "assets/img/user/". $tmpResponse->id . ".jpg";
 
 					$_SESSION['socialLogin']		= TRUE;
-					$_SESSION['authData'] 			= $tmpResponse;
-					$_SESSION['authData']->image 	= $fotografia;
+					$_SESSION['socialAuthData'] 			= $tmpResponse;
+					$_SESSION['socialAuthData']->image 	= $fotografia;
 				}
 			}
 
@@ -72,14 +72,14 @@
 			$setData = array(
 				'firstName'	=> $put_vars['firstName'],
 				'lastName'	=> $put_vars['lastName'],
-				'userId'	=> $_SESSION['authData']->id
+				'userId'	=> $_SESSION['socialAuthData']->id
 			);
 
 			$tmpResponse = $userModel->updateData($setData);
 
 			if($tmpResponse){
-				$_SESSION['authData']->name 		= $put_vars['firstName'];
-				$_SESSION['authData']->last_name 	= $put_vars['lastName'];
+				$_SESSION['socialAuthData']->name 		= $put_vars['firstName'];
+				$_SESSION['socialAuthData']->last_name 	= $put_vars['lastName'];
 
 				$folder = "assets/img/user";
 				if( !is_dir(dirname(__FILE__, 3) . "/{$folder}") )
@@ -90,12 +90,12 @@
 					$tempname = $_FILES['cropImage']['tmp_name'];
 					       
 					if(move_uploaded_file($tempname, "../../{$folder}/{$filename}"))
-						$_SESSION['authData']->image = "assets/img/user/". $_SESSION['authData']->id . ".jpg";
+						$_SESSION['socialAuthData']->image = "assets/img/user/". $_SESSION['socialAuthData']->id . ".jpg";
 				}
 
 				$response = array(
 					'codeResponse'	=> 200,
-					'data' 			=> $_SESSION['authData']
+					'data' 			=> $_SESSION['socialAuthData']
 				);
 			}else{
 				$response = array(

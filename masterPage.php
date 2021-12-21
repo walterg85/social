@@ -380,6 +380,14 @@
 
             // Accion para unirse a un grupo
             $("#btnJoinGroup").click( fnJoinGroup);
+
+            if(userData.groupsid.length > 0){
+                let ids = Array.from(userData.groupsid);
+                if( ids.includes(groupId) ){
+                    $("#btnJoinGroup").addClass("d-none");
+                    $("#newTopic").removeClass("d-none");
+                }
+            }
         })()
 
         // Metodo para uirse a un grupo
@@ -393,7 +401,6 @@
                     };
 
                     $.post(`${base_url}/core/controllers/group.php`, objData, function(result) {
-                        // $("#btnJoinGroup").addClass("d-none");
                         window.location.reload();
                     });
                 }

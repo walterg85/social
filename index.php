@@ -46,6 +46,8 @@
 
         // Listar las temas
         listTopics();
+
+        $("#btnJoinGroup").addClass("d-none");
     })()
 
     // Listar los temas activos

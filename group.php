@@ -61,7 +61,7 @@
     <h6 class="border-bottom pb-2 mb-0">
         <texto class="labelRecientes">Recent topics</texto>
         <small class="d-block text-end">
-            <a href="javascript:void(0);" class="lableNuevotema" id="newTopic">New topic</a>
+            <a href="javascript:void(0);" class="lableNuevotema d-none" id="newTopic">New topic</a>
         </small>
     </h6>
 

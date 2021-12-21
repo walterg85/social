@@ -70,4 +70,29 @@
 
             return $sql->fetch(PDO::FETCH_ASSOC);
         }
+
+        // Metodo para registrar un usuario a un grupo
+        public function joinGroup($groupId, $userId){
+            $pdo = new Conexion();
+            $cmd = '
+                INSERT INTO usergroup
+                    (group_id, user_id, tipo, register_date, estatus)
+                VALUES
+                    (:group_id, :user_id, 2, now(), 1);
+            ';
+
+            $parametros = array(
+                ':group_id' => $groupId,
+                ':user_id'  => $userId
+            );
+            
+            try {
+                $sql = $pdo->prepare($cmd);
+                $sql->execute($parametros);
+
+                return $pdo->lastInsertId();
+            } catch (PDOException $e) {
+                return 0;
+            }
+        }
     }

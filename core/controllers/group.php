@@ -62,6 +62,16 @@
 			header('HTTP/1.1 200 Ok');
 			header("Content-Type: application/json; charset=UTF-8");			
 			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_JoinGroup'){
+			$groupModel->joinGroup($put_vars['groupId'], $_SESSION['socialAuthData']->id);
+
+			$response = array(
+				'codeResponse' => 200
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
 		}
 	}
 

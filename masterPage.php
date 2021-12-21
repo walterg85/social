@@ -245,7 +245,7 @@
             <img class="me-3" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo-white.svg" alt="" width="48" height="38">
             <div class="lh-1">
                 <h1 class="h6 mb-0 text-white lh-1 generalLabel">Bootstrap</h1>
-                <small class="sinceLabel">Since 2011</small>
+                <small class="sinceLabel">Since 2011</small> | <a href="javascript:void(0);" class="text-decoration-none text-white" id="btnJoinGroup">Join the group</a>
             </div>
         </div>
 
@@ -377,7 +377,27 @@
 
             switchLanguage();
             // Fin control de idioma
+
+            // Accion para unirse a un grupo
+            $("#btnJoinGroup").click( fnJoinGroup);
         })()
+
+        // Metodo para uirse a un grupo
+        function fnJoinGroup(){
+            (async () => {
+                const tmpResult = await showConfirmation(`Join?`, 'Are you sure to join this group?', "Join");
+                if(tmpResult.isConfirmed){
+                    let objData = {
+                        "_method":"_JoinGroup",
+                        "groupId": groupId
+                    };
+
+                    $.post(`${base_url}/core/controllers/group.php`, objData, function(result) {
+                        $("#btnJoinGroup").addClass("d-none");
+                    });
+                }
+            })()
+        }
 
         // Metodo para registrar nuevo grupo
         function fnRegistrarGrupo() {

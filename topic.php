@@ -2,6 +2,38 @@
     // Se inicia el metodo para encapsular todo el contenido de las paginas (bufering), para dar salida al HTML 
     ob_start();
 ?>
+<!-- Panel lateral para ver detalle del usuario seleccionado -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUserDetail" >
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">User profile</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="frmUsrProfile" class="needs-validation-group" novalidate>
+            <div class="row">
+                <div class="col-3">
+                    <img src="#" class="figure-img img-fluid rounded imgProfile">
+                </div>
+                <div class="col-9">
+                    <div class="mb-3">
+                        <label for="nameProfile" class="form-label labelNombre">Name</label>
+                        <input type="text" name="nameProfile" class="form-control" id="nameProfile" readonly>              
+                    </div>
+                    <p class="lblMemberSince"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <p>He is a member of</p>
+                    <ul class="listMember"></ul>
+                </div>
+            </div>
+
+            <button type="button" class="w-100 btn btn-lg btn-success" id="btnDeleteFromGroup">Remove from group</button>
+        </form>
+    </div>
+</div>
 
 <h3 id="topicName">Sample blog post</h3>
 <p class="text-muted"><text id="topicDate">January 1, 2021</text> <text class="labelBy">by</text> <a href="javascript:void(0);" class="text-decoration-none" id="topicOwner">Mark</a></p>
@@ -77,14 +109,6 @@
 </div>
 
 
-<div class="row ">
-    <div class="col-md-1">
-        
-    </div>
-    <div class="col-md-11">
-        
-    </div>
-</div>
 <div id="conetndorComentarios" class="mb-5"></div>
 
 <script type="text/javascript">
@@ -92,7 +116,8 @@
         urlParams   = new URLSearchParams(queryString),
         topicId     = urlParams.get('id'),
         labelLike   = "",
-        ownerGroup  = 0;
+        ownerGroup  = 0,
+        offcanvasUserDetail = new bootstrap.Offcanvas( $("#offcanvasUserDetail") );
 
     (function () {
         'use strict'
@@ -214,18 +239,52 @@
                     });
                 }
             });
+
+            $(".btnUserProfile").unbind().click( function(){
+                let user_id = $(this).data("userid"),
+                    groupId = $(this).data("groupid"),
+                    admons = $(this).data("administrar");
+
+                if(admons == 0){
+                    $("#btnDeleteFromGroup").addClass("d-none");
+                } else {
+                    $("#btnDeleteFromGroup").removeClass("d-none");
+                }
+
+                let _Data = {
+                    "_method": "_GetUserdata",
+                    "userId": user_id,
+                    "groupId": groupId
+                };
+
+                $.post(`${base_url}/core/controllers/topic.php`, _Data, function(result){
+                    let usData = result.data.usinfo;
+
+                    $("#nameProfile").val(usData.username);
+                    $(".imgProfile").attr("src", usData.userFoto);
+                    $(".lblMemberSince").html(`Member of ${usData.nombreGrupo} Since ${usData.register_date}`);
+
+                    let usHistorial = result.data.usData;
+                    $(".listMember").html("");
+                    $.each(usHistorial, function(index, item){
+                        $(".listMember").append(`<li>${item.nombre} Since ${item.register_date}</li>`);
+                    });
+                });
+
+                offcanvasUserDetail.show();
+            });
         });
     }
 
     // Metodo recursivo para pintar los comentarios
     function rcvComentario(item, esValido, margen = 0){
-        let objComent = $(".blockClone").clone();
+        let objComent = $(".blockClone").clone(),
+            administrar = 0;
 
-        if(userData && ownerGroup == userData.id && item.esMiembro == 1){
-            objComent.find(".autor").html(`<a href="javascript:void(0)" class="text-decoration-none" data-userid="${item.userId}" data-groupid="${item.group_id}">${item.username} | <small>${item.fecha_registro}</small></a>`);
-        }else{
-            objComent.find(".autor").html(`${item.username} | <small>${item.fecha_registro}</small>`);
-        }
+        if(userData && ownerGroup == userData.id && item.esMiembro == 1)
+            administrar = 1;
+
+        objComent.find(".autor").html(`<a href="javascript:void(0)" class="text-decoration-none btnUserProfile" data-userid="${item.userId}" data-groupid="${item.group_id}" data-administrar="${administrar}">${item.username} | <small>${item.fecha_registro}</small></a>`);
 
         objComent.find(".comentario").html(item.comentario);
         objComent.find(".userImg").attr("src", item.userFoto);
@@ -259,11 +318,11 @@
 
         $(objComent).appendTo("#conetndorComentarios");
 
-        // if(item.respuestas && item.respuestas.length > 0)
-        //     $.each( item.respuestas, function(i, j){
-        //         if( rcvComentario(j, esValido, 6) )
-        //             return;
-        //     });
+        if(item.respuestas && item.respuestas.length > 0)
+            $.each( item.respuestas, function(i, j){
+                if( rcvComentario(j, esValido, 6) )
+                    return;
+            });
 
         return true;
     }

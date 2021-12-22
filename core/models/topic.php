@@ -288,4 +288,47 @@
 
             return TRUE;
         }
+
+        // Metodo para mostrar los datos e historial de un usuario
+        public function getUserdata($userId, $groupId){
+            $pdo = new Conexion();
+
+            $cmd = '
+                SELECT
+                    concat(u.name, " ", u.last_name) AS username,
+                    concat("assets/img/user/", u.id, ".jpg") AS userFoto,
+                    (SELECT nombre FROM grupo where id =:group_id) AS nombreGrupo,
+                    (SELECT register_date FROM usergroup WHERE group_id =:group_id AND user_id =:id) AS register_date
+                FROM user u
+                WHERE u.id =:id
+            ';
+
+            $parametros = array(
+                ':id'       => $userId,
+                ':group_id' => $groupId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            $data['usinfo'] = $sql->fetch(PDO::FETCH_ASSOC);
+
+            $cmd = '
+                SELECT ug.register_date, g.nombre
+                FROM usergroup ug
+                INNER JOIN grupo g ON g.id = ug.group_id
+                WHERE ug.user_id =:id AND ug.estatus = 1
+            ';
+
+             $parametros = array(
+                ':id'       => $userId
+            );
+
+            $sql = $pdo->prepare($cmd);
+            $sql->execute($parametros);
+
+            $data['usData'] = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            return $data;
+        }
     }

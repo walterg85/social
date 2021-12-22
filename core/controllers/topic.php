@@ -92,15 +92,15 @@
 			exit(json_encode($response));
 		} else if($put_vars['_method'] == '_GetComments'){
 			$tmpData = $topicModel->getComments( $put_vars['topicId'] );
-			// $data = array();
-			// foreach ($tmpData as $key => $value) {
-			// 	$value['respuestas'] = $topicModel->getComments($put_vars['topicId'], $value['id']);
-			// 	$data[] = $value;
-			// }
+			$data = array();
+			foreach ($tmpData as $key => $value) {
+				$value['respuestas'] = $topicModel->getComments($put_vars['topicId'], $value['id']);
+				$data[] = $value;
+			}
 
 			$response = array(
 				'codeResponse' 	=> 200,
-				'data' 			=> $tmpData
+				'data' 			=> $data
 			);
 
 			header('HTTP/1.1 200 Ok');
@@ -180,6 +180,15 @@
 
 			$response = array(
 				'codeResponse' 	=> 200
+			);
+
+			header('HTTP/1.1 200 Ok');
+			header("Content-Type: application/json; charset=UTF-8");			
+			exit(json_encode($response));
+		} else if($put_vars['_method'] == '_GetUserdata'){
+			$response = array(
+				'codeResponse' 	=> 200,
+				'data' 			=> $topicModel->getUserdata( $put_vars['userId'], $put_vars['groupId'] )
 			);
 
 			header('HTTP/1.1 200 Ok');
